@@ -445,7 +445,7 @@
     <div class="ticker-item">Retatrutide <b>IN STOCK</b></div><div class="ticker-sep">|</div>
     <div class="ticker-item">Tesamorelin <b>IN STOCK</b></div><div class="ticker-sep">|</div>
     <div class="ticker-item">GHK-CU <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">Lemon Bottle <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">Glow <b>IN STOCK</b></div><div class="ticker-sep">|</div>
     <div class="ticker-item">MOTS-c <b>IN STOCK</b></div><div class="ticker-sep">|</div>
     <div class="ticker-item">NAD+ <b>IN STOCK</b></div><div class="ticker-sep">|</div>
     <div class="ticker-item">BPC-157 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
@@ -457,7 +457,7 @@
     <div class="ticker-item">Retatrutide <b>IN STOCK</b></div><div class="ticker-sep">|</div>
     <div class="ticker-item">Tesamorelin <b>IN STOCK</b></div><div class="ticker-sep">|</div>
     <div class="ticker-item">GHK-CU <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">Lemon Bottle <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">Glow <b>IN STOCK</b></div><div class="ticker-sep">|</div>
     <div class="ticker-item">MOTS-c <b>IN STOCK</b></div><div class="ticker-sep">|</div>
     <div class="ticker-item">NAD+ <b>IN STOCK</b></div><div class="ticker-sep">|</div>
     <div class="ticker-item">BPC-157 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
@@ -592,7 +592,7 @@
 const COMPOUNDS = [
   // ── Weight Loss ──
   {cat:"Weight Loss",name:"Retatrutide",doses:[{s:"5mg",c:"RT5",p:54,st:"in"},{s:"10mg",c:"RT10",p:88,st:"in"},{s:"15mg",c:"RT15",p:123,st:"in"},{s:"20mg",c:"RT20",p:155,st:"in"},{s:"30mg",c:"RT30",p:200,st:"in"},{s:"40mg",c:"RT40",p:275,st:"in"},{s:"50mg",c:"RT50",p:320,st:"in"},{s:"60mg",c:"RT60",p:370,st:"in"},{s:"100mg",c:"RT100",p:490,st:"low"}]},
-  {cat:"Weight Loss",name:"Lemon Bottle (Glow)",doses:[{s:"3.5mg/10ml",c:"Lemon",p:50,st:"in"}]},
+  {cat:"Weight Loss",name:"Glow",doses:[{s:"3.5mg/10ml",c:"Lemon",p:50,st:"in"}]},
   // ── Growth Hormone ──
   {cat:"Growth Hormone",name:"Tesamorelin",doses:[{s:"5mg",c:"TSM5",p:89,st:"in"},{s:"10mg",c:"TSM10",p:156,st:"in"},{s:"20mg",c:"TSM20",p:272,st:"in"}]},
   {cat:"Growth Hormone",name:"CJC-1295 NO DAC",doses:[{s:"2mg",c:"CND2",p:48,st:"in"},{s:"5mg",c:"CND5",p:77,st:"in"},{s:"10mg",c:"CND10",p:156,st:"in"}]},
@@ -616,7 +616,7 @@ const COMPOUNDS = [
 
 // All compounds are featured — catalog is curated
 const BESTSELLERS = new Set([
-  "Retatrutide","Lemon Bottle (Glow)","Tesamorelin","CJC-1295 NO DAC",
+  "Retatrutide","Glow","Tesamorelin","CJC-1295 NO DAC",
   "Ipamorelin","IGF-1LR3","BPC-157","TB-500","GHK-CU","MOTS-c",
   "NAD+","BPC-157 + TB-500","CJC-1295 NO DAC + Ipamorelin","Bac. Water"
 ]);
@@ -807,83 +807,101 @@ function scramble() {
 setTimeout(scramble, 900);
 
 // ── 3D MOLECULE ───────────────────────────────────────────────────────────────
-(function(){
+try {
   const mc = document.getElementById('molecule-canvas');
-  const ctx2 = mc.getContext('2d');
-  let W, H, cx, cy;
+  if (!mc) throw new Error('no canvas');
+  const mctx = mc.getContext('2d');
 
-  function resize() {
-    W = mc.width  = mc.offsetWidth;
-    H = mc.height = mc.offsetHeight;
-    cx = W / 2; cy = H / 2;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Mouse influence
-  let mouseX = 0, mouseY = 0;
-  document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
-
-  // Peptide-like molecule: central atom + 7 bonded atoms in 3D sphere layout
+  // Atoms: [x, y, z, radius, label]
   const ATOMS = [
-    {x:0,    y:0,    z:0,    r:14, col:'rgba(17,17,17,0.85)', label:'C'},
-    {x:80,   y:0,    z:30,   r:10, col:'rgba(60,60,60,0.75)', label:'N'},
-    {x:-80,  y:20,   z:-20,  r:10, col:'rgba(60,60,60,0.75)', label:'O'},
-    {x:20,   y:90,   z:10,   r:10, col:'rgba(80,80,80,0.7)',  label:'C'},
-    {x:30,   y:-80,  z:40,   r:9,  col:'rgba(80,80,80,0.7)',  label:'H'},
-    {x:-30,  y:-60,  z:-50,  r:9,  col:'rgba(80,80,80,0.7)',  label:'N'},
-    {x:70,   y:60,   z:-30,  r:8,  col:'rgba(100,100,100,0.6)', label:'H'},
-    {x:-60,  y:70,   z:50,   r:8,  col:'rgba(100,100,100,0.6)', label:'C'},
-    {x:100,  y:-40,  z:-60,  r:7,  col:'rgba(120,120,120,0.55)', label:'O'},
-    {x:-100, y:-30,  z:20,   r:7,  col:'rgba(120,120,120,0.55)', label:'H'},
-    {x:10,   y:110,  z:-40,  r:7,  col:'rgba(120,120,120,0.55)', label:'C'},
-    {x:-20,  y:-110, z:10,   r:6,  col:'rgba(140,140,140,0.5)',  label:'N'},
+    [  0,   0,   0, 14, 'C'],
+    [ 80,   0,  30, 10, 'N'],
+    [-80,  20, -20, 10, 'O'],
+    [ 20,  90,  10, 10, 'C'],
+    [ 30, -80,  40,  9, 'H'],
+    [-30, -60, -50,  9, 'N'],
+    [ 70,  60, -30,  8, 'H'],
+    [-60,  70,  50,  8, 'C'],
+    [100, -40, -60,  7, 'O'],
+    [-100,-30,  20,  7, 'H'],
+    [ 10, 110, -40,  7, 'C'],
+    [-20,-110,  10,  6, 'N'],
   ];
-
   const BONDS = [[0,1],[0,2],[0,3],[0,4],[0,5],[1,6],[1,8],[2,9],[3,7],[3,10],[5,11]];
+  const COLS  = ['rgba(17,17,17,0.85)','rgba(50,50,50,0.75)','rgba(50,50,50,0.75)',
+                 'rgba(70,70,70,0.7)','rgba(70,70,70,0.7)','rgba(70,70,70,0.7)',
+                 'rgba(95,95,95,0.6)','rgba(95,95,95,0.6)','rgba(115,115,115,0.55)',
+                 'rgba(115,115,115,0.55)','rgba(115,115,115,0.55)','rgba(135,135,135,0.5)'];
 
-  let rotX = 0.3, rotY = 0.5;
-  let velX = 0.003, velY = 0.005;
-  let tgtX = rotX, tgtY = rotY;
+  let W = 0, H = 0, cxM = 0, cyM = 0;
+  function resizeMol() {
+    W = mc.width  = mc.offsetWidth  || mc.parentElement.offsetWidth  || 800;
+    H = mc.height = mc.offsetHeight || mc.parentElement.offsetHeight || 600;
+    cxM = W / 2; cyM = H / 2;
+  }
+  resizeMol();
+  window.addEventListener('resize', resizeMol);
 
-  function project(x, y, z, scale) {
-    const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
-    const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
-    let y2 = y * cosX - z * sinX;
-    let z2 = y * sinX + z * cosX;
-    let x2 = x * cosY + z2 * sinY;
-    let z3 = -x * sinY + z2 * cosY;
-    const fov = 600;
-    const f = fov / (fov + z3);
-    return { sx: cx + x2 * f * scale, sy: cy + y2 * f * scale, z: z3, scale: f };
+  let mRx = 0.3, mRy = 0.5;
+  let molMx = 0, molMy = 0;
+  document.addEventListener('mousemove', e => { molMx = e.clientX; molMy = e.clientY; });
+
+  function proj(ax, ay, az, rx, ry, sc) {
+    const cosX = Math.cos(rx), sinX = Math.sin(rx);
+    const cosY = Math.cos(ry), sinY = Math.sin(ry);
+    const y2 = ay * cosX - az * sinX;
+    const z2 = ay * sinX + az * cosX;
+    const x2 = ax * cosY + z2 * sinY;
+    const z3 = -ax * sinY + z2 * cosY;
+    const f  = 600 / (600 + z3);
+    return { sx: cxM + x2 * f * sc, sy: cyM + y2 * f * sc, depth: z3, f };
   }
 
-  function drawMolecule(scale) {
-    ctx2.clearRect(0, 0, W, H);
+  (function molLoop() {
+    requestAnimationFrame(molLoop);
+    if (!W || !H) return;
+
+    // Mouse tilt
+    const rect = mc.getBoundingClientRect();
+    const tgtRy = mRy + ((molMx - rect.left) / (rect.width  || 1) - 0.5) * 0.7;
+    const tgtRx = mRx - ((molMy - rect.top)  / (rect.height || 1) - 0.5) * 0.45;
+    mRx += (tgtRx - mRx) * 0.03 + 0.003;
+    mRy += (tgtRy - mRy) * 0.03 + 0.005;
+
+    const sc = Math.min(W, H) / 480;
+    mctx.clearRect(0, 0, W, H);
 
     // Project all atoms
-    const projected = ATOMS.map(a => ({ ...a, ...project(a.x, a.y, a.z, scale) }));
-
-    // Sort by z for painter's algorithm
-    projected.sort((a, b) => a.z - b.z);
+    const P = ATOMS.map(a => proj(a[0], a[1], a[2], mRx, mRy, sc));
 
     // Draw bonds
     BONDS.forEach(([i, j]) => {
-      const a = projected.find((_, idx) => ATOMS.indexOf(ATOMS[i]) === projected.indexOf(projected.find(p => p.label === ATOMS[i].label && Math.abs(p.sx - project(ATOMS[i].x, ATOMS[i].y, ATOMS[i].z, scale).sx) < 1)));
-      const pa = project(ATOMS[i].x, ATOMS[i].y, ATOMS[i].z, scale);
-      const pb = project(ATOMS[j].x, ATOMS[j].y, ATOMS[j].z, scale);
-      const alpha = 0.12 + 0.08 * ((pa.z + pb.z) / 200 + 0.5);
-      ctx2.beginPath();
-      ctx2.moveTo(pa.sx, pa.sy);
-      ctx2.lineTo(pb.sx, pb.sy);
-      ctx2.strokeStyle = 'rgba(17,17,17,' + Math.max(0.06, Math.min(0.2, alpha)) + ')';
-      ctx2.lineWidth = 1.5 * ((pa.scale + pb.scale) / 2);
-      ctx2.stroke();
+      const pi = P[i], pj = P[j];
+      mctx.beginPath();
+      mctx.moveTo(pi.sx, pi.sy);
+      mctx.lineTo(pj.sx, pj.sy);
+      const avgF = (pi.f + pj.f) / 2;
+      mctx.strokeStyle = 'rgba(17,17,17,' + (avgF * 0.18).toFixed(3) + ')';
+      mctx.lineWidth = avgF * 2;
+      mctx.stroke();
     });
 
-    // Draw atoms (back to front via sorted projected)
-    projected.forEach(a => {
-      const r = a.r * a.scale * scale;
-      // Shadow/glow
-      ctx2.beginPath();
-      ctx2.arc(a.sx, a.sy, r * 1.6, 0, Math.PI * 2);
+    // Sort atoms back-to-front
+    const order = ATOMS.map((_, i) => i).sort((a, b) => P[a].depth - P[b].depth);
+
+    order.forEach(i => {
+      const p = P[i];
+      const r = ATOMS[i][3] * p.f * sc;
+      if (r < 1) return;
+      // Soft shadow
+      mctx.beginPath();
+      mctx.arc(p.sx, p.sy, r * 1.7, 0, Math.PI * 2);
+      mctx.fillStyle = 'rgba(0,0,0,0.04)';
+      mctx.fill();
+      // Atom body
+      mctx.beginPath();
+      mctx.arc(p.sx, p.sy, r, 0, Math.PI * 2);
+      mctx.fillStyle = COLS[i];
+      mctx.fill();
+      // Specular highlight
+    
