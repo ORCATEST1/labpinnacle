@@ -558,14 +558,74 @@
     nav ul { display:none; }
     nav ul.open { display:flex; flex-direction:column; gap:20px; position:fixed; top:62px; left:0; right:0; background:rgba(249,249,249,0.98); padding:26px 24px; border-bottom:1px solid var(--border); z-index:99; }
     .hamburger { display:flex; }
+    .hero { min-height:92svh; padding:104px 18px 46px; }
     .form-grid { grid-template-columns:1fr; }
     .form-wrapper { padding:26px 18px; }
     body { cursor:auto; }
-    #cursor, #cursor-ring, #trail-canvas, .molecule-canvas { display:none; }
-    .catalog-controls { padding:14px; border-radius:12px; }
-    .catalog-group { padding:0 12px 4px; border-radius:12px; }
-    .catalog-group > div { overflow-x:auto; -webkit-overflow-scrolling:touch; }
-    .catalog-table { min-width:720px; }
+    #cursor, #cursor-ring, #trail-canvas { display:none; }
+    .molecule-canvas { display:block; filter:saturate(0.9); }
+    .molecule-primary { top:12%; right:-20%; width:300px; height:300px; opacity:0.34; }
+    .molecule-secondary { left:-22%; bottom:7%; width:230px; height:230px; opacity:0.24; }
+    .molecule-tertiary, .molecule-quaternary, .molecule-quinary { display:none; }
+    .catalog-controls { padding:14px; border-radius:12px; gap:12px; }
+    .cat-filter { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:8px; width:100%; }
+    .filter-btn { min-height:34px; padding:7px 9px; white-space:normal; line-height:1.25; }
+    .search-box { width:100%; }
+    .coa-toggle-wrap { width:100%; justify-content:space-between; }
+    .catalog-group { padding:0 12px 12px; border-radius:12px; }
+    .catalog-group-header { gap:10px; align-items:flex-start; padding:14px 0; }
+    .catalog-group-header h3 { font-size:0.66rem; line-height:1.35; }
+    .group-count { white-space:nowrap; padding-top:1px; }
+    .catalog-group > div { overflow:visible; }
+    .catalog-table { display:block; width:100%; min-width:0; border-collapse:separate; font-size:0.8rem; }
+    .catalog-table thead { display:none; }
+    .catalog-table tbody { display:grid; gap:12px; }
+    .catalog-table tr {
+      display:grid;
+      gap:10px;
+      padding:14px;
+      border:1px solid var(--border);
+      border-radius:10px;
+      background:#fbfdff;
+    }
+    .catalog-table td {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:0;
+      border-bottom:0;
+      min-width:0;
+    }
+    .catalog-table tr:hover td { background:transparent; }
+    .catalog-table td::before {
+      content:attr(data-label);
+      color:var(--muted2);
+      font-size:0.62rem;
+      letter-spacing:0.1em;
+      text-transform:uppercase;
+      font-weight:700;
+      flex:0 0 auto;
+    }
+    .catalog-table .product-name {
+      display:block;
+      font-size:1rem;
+      padding-bottom:2px;
+    }
+    .catalog-table .product-name::before { content:none; }
+    .catalog-table td[data-label="Strength"] {
+      display:block;
+    }
+    .catalog-table td[data-label="Strength"]::before {
+      display:block;
+      margin-bottom:8px;
+    }
+    .dose-pills { gap:6px; }
+    .dose-pill { min-height:30px; padding:6px 10px; }
+    .price-cell { font-size:0.95rem; }
+    .catalog-table.coa-visible .coa-cell { display:flex; }
+    .order-btn { width:100%; min-height:36px; }
+    .catalog-table td:last-child::before { content:none; }
 
     .quality-table-wrap { display:none; }
     .quality-cards { display:grid; gap:14px; }
@@ -964,11 +1024,11 @@ function renderCatalog() {
 
       html += `<tr id="row-${id}">
         <td class="product-name">${compound.name}</td>
-        <td><div class="dose-pills">${pillsHtml}</div></td>
-        <td><span class="product-code" id="sku-${id}">${d.c}</span></td>
-        <td class="price-cell" id="price-${id}">${fmt(pricePerVial)}</td>
-        <td id="stock-${id}">${stockHtml}</td>
-        ${showCoa?`<td class="coa-cell"><a href="#order" class="coa-link" onclick="prefillCompound('${compound.name} ${d.s}')">Request</a></td>`:''}
+        <td data-label="Strength"><div class="dose-pills">${pillsHtml}</div></td>
+        <td data-label="SKU"><span class="product-code" id="sku-${id}">${d.c}</span></td>
+        <td data-label="Price" class="price-cell" id="price-${id}">${fmt(pricePerVial)}</td>
+        <td data-label="Stock" id="stock-${id}">${stockHtml}</td>
+        ${showCoa?`<td data-label="CoA" class="coa-cell"><a href="#order" class="coa-link" onclick="prefillCompound('${compound.name} ${d.s}')">Request</a></td>`:''}
         <td><button type="button" class="order-btn" onclick="prefillCompound('${compound.name} ${d.s}')">Order</button></td>
       </tr>`;
     });
