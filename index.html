@@ -893,15 +893,97 @@ try {
       const p = P[i];
       const r = ATOMS[i][3] * p.f * sc;
       if (r < 1) return;
-      // Soft shadow
       mctx.beginPath();
       mctx.arc(p.sx, p.sy, r * 1.7, 0, Math.PI * 2);
       mctx.fillStyle = 'rgba(0,0,0,0.04)';
       mctx.fill();
-      // Atom body
       mctx.beginPath();
       mctx.arc(p.sx, p.sy, r, 0, Math.PI * 2);
       mctx.fillStyle = COLS[i];
       mctx.fill();
-      // Specular highlight
-    
+      mctx.beginPath();
+      mctx.arc(p.sx - r*0.28, p.sy - r*0.28, r*0.32, 0, Math.PI*2);
+      mctx.fillStyle = 'rgba(255,255,255,0.22)';
+      mctx.fill();
+      if (r > 6) {
+        mctx.fillStyle = 'rgba(255,255,255,0.88)';
+        mctx.font = 'bold ' + Math.round(r*0.85) + 'px Arial';
+        mctx.textAlign = 'center';
+        mctx.textBaseline = 'middle';
+        mctx.fillText(ATOMS[i][4], p.sx, p.sy);
+      }
+    });
+  })();
+} catch(e) { console.warn('Molecule render error:', e); }
+
+// ── CURSOR + TRAIL ────────────────────────────────────────────────────────────
+const cursorEl  = document.getElementById('cursor');
+const ringEl    = document.getElementById('cursor-ring');
+const trailCanvas = document.getElementById('trail-canvas');
+const tctx      = trailCanvas.getContext('2d');
+let mx=-100, my=-100, rx=-100, ry=-100;
+const pts = [];
+
+trailCanvas.width = window.innerWidth; trailCanvas.height = window.innerHeight;
+window.addEventListener('resize', () => { trailCanvas.width=window.innerWidth; trailCanvas.height=window.innerHeight; });
+
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  cursorEl.style.left=mx+'px'; cursorEl.style.top=my+'px';
+  if (Math.random()>0.5) pts.push({x:mx,y:my,vx:(Math.random()-.5)*1.2,vy:(Math.random()-.5)*1.2,life:1,size:Math.random()*2.5+1});
+});
+
+document.querySelectorAll('a, button, .filter-btn, .order-btn, .dose-pill, .toggle-switch').forEach(el => {
+  el.addEventListener('mouseenter', () => cursorEl.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cursorEl.classList.remove('hover'));
+});
+
+function loop() {
+  rx += (mx-rx)*0.11; ry += (my-ry)*0.11;
+  ringEl.style.left=rx+'px'; ringEl.style.top=ry+'px';
+  tctx.clearRect(0,0,trailCanvas.width,trailCanvas.height);
+  for (let i=pts.length-1;i>=0;i--) {
+    const p=pts[i]; p.x+=p.vx; p.y+=p.vy; p.life-=0.05;
+    if (p.life<=0){pts.splice(i,1);continue;}
+    tctx.beginPath(); tctx.arc(p.x,p.y,p.size*p.life,0,Math.PI*2);
+    tctx.fillStyle=`rgba(17,17,17,${p.life*0.35})`;
+    tctx.fill();
+  }
+  requestAnimationFrame(loop);
+}
+loop();
+
+// ── MISC ──────────────────────────────────────────────────────────────────────
+function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
+document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
+window.addEventListener('scroll', () => {
+  document.querySelector('nav').style.background = window.scrollY>60 ? 'rgba(249,249,249,0.98)' : 'rgba(249,249,249,0.9)';
+});
+
+function submitForm(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn = form.querySelector('.submit-btn');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(new FormData(form)).toString()
+  })
+  .then(() => {
+    document.getElementById('formContent').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  })
+  .catch(() => {
+    btn.textContent = 'Submit Request — Get Invoice';
+    btn.disabled = false;
+    alert('Submission failed. Please email contact@labpinnacle.com directly.');
+  });
+}
+
+const obs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';} }), {threshold:0.08});
+document.querySelectorAll('.trust-item,.step').forEach(el => { el.style.opacity='0'; el.style.transform='translateY(16px)'; el.style.transition='opacity 0.5s ease,transform 0.5s ease'; obs.observe(el); });
+</script>
+</body>
+</html>
