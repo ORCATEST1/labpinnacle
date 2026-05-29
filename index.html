@@ -5,30 +5,34 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PINNACLE LABS — Research Grade Peptides</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
   :root {
-    --bg:       #f9f9f9;
+    --bg:       #f6f8fc;
     --surface:  #ffffff;
-    --surface2: #f2f2f2;
-    --border:   #dedede;
-    --border2:  #cacaca;
-    --text:     #111111;
-    --muted:    #777777;
-    --muted2:   #999999;
-    --accent:   #111111;
-    --accent2:  #444444;
-    --low:      #888888;
+    --surface2: #edf3ff;
+    --border:   #d8e1f0;
+    --border2:  #bdd0ee;
+    --text:     #0f172a;
+    --muted:    #5c6b84;
+    --muted2:   #7f8ca3;
+    --accent:   #2f6df6;
+    --accent2:  #1d4ed8;
+    --low:      #94a3b8;
+    --accent-soft: #e7efff;
+    --shadow-soft: 0 14px 40px rgba(15, 23, 42, 0.05);
   }
 
   * { margin:0; padding:0; box-sizing:border-box; }
   html { scroll-behavior:smooth; }
 
   body {
-    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family:'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background:var(--bg);
     color:var(--text);
     overflow-x:hidden;
-    cursor:none;
   }
+
+  body.pointer-effects-enabled { cursor:none; }
 
   /* ── CURSOR ── */
   #cursor {
@@ -50,10 +54,47 @@
   }
   #trail-canvas { position:fixed; inset:0; z-index:9997; pointer-events:none; }
 
-  /* ── MOLECULE CANVAS ── */
-  #molecule-canvas {
-    position:absolute; top:0; left:0; width:100%; height:100%;
-    z-index:0; pointer-events:none;
+  /* ── MOLECULE CANVASES ── */
+  .molecule-canvas {
+    position:absolute;
+    z-index:0;
+    pointer-events:none;
+    filter:saturate(0.92);
+  }
+  .molecule-primary {
+    top:6%;
+    right:4%;
+    width:min(460px, 34vw);
+    height:min(460px, 34vw);
+    opacity:0.30;
+  }
+  .molecule-secondary {
+    left:4%;
+    bottom:7%;
+    width:min(320px, 24vw);
+    height:min(320px, 24vw);
+    opacity:0.22;
+  }
+  .molecule-tertiary {
+    right:13%;
+    bottom:8%;
+    width:min(280px, 21vw);
+    height:min(280px, 21vw);
+    opacity:0.18;
+  }
+  .molecule-quaternary {
+    left:8%;
+    top:17%;
+    width:min(250px, 18vw);
+    height:min(250px, 18vw);
+    opacity:0.17;
+  }
+  .molecule-quinary {
+    right:1%;
+    top:46%;
+    width:min(300px, 22vw);
+    height:min(300px, 22vw);
+    opacity:0.16;
   }
 
   /* ── NAV ── */
@@ -74,15 +115,16 @@
 
   nav ul { display:flex; gap:32px; list-style:none; }
   nav a { color:var(--muted); text-decoration:none; font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:500; transition:color 0.2s; }
-  nav a:hover { color:var(--text); }
+  nav a:hover { color:var(--accent); }
 
   .nav-cta {
-    border:1px solid var(--text); color:var(--text) !important;
-    padding:7px 18px; border-radius:2px; transition:all 0.2s !important;
+    border:1px solid var(--accent); color:var(--accent) !important;
+    padding:7px 18px; border-radius:999px; transition:all 0.2s !important;
+    background:rgba(255,255,255,0.72);
   }
-  .nav-cta:hover { background:var(--text) !important; color:var(--bg) !important; }
+  .nav-cta:hover { background:var(--accent) !important; color:#fff !important; box-shadow:0 10px 24px rgba(47, 109, 246, 0.18); }
 
-  .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; }
+  .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; background:transparent; border:0; padding:0; }
   .hamburger span { display:block; width:22px; height:1.5px; background:var(--text); transition:0.3s; }
 
   /* ── HERO ── */
@@ -101,7 +143,7 @@
     color:var(--muted); margin-bottom:36px;
     animation:fadeUp 0.8s ease both;
   }
-  .badge-dot { width:6px; height:6px; border-radius:50%; background:var(--text); animation:dotPulse 2.5s ease-in-out infinite; }
+  .badge-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); animation:dotPulse 2.5s ease-in-out infinite; }
   @keyframes dotPulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
   .hero h1 {
@@ -111,14 +153,46 @@
   }
 
   .scatter-word {
+    position:relative;
     display:inline-block;
-    background:linear-gradient(135deg, #111 0%, #555 40%, #111 100%);
-    background-size:200% auto;
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    padding-bottom:0.08em;
+    background:linear-gradient(135deg, var(--text) 0%, var(--accent2) 46%, var(--accent) 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
     background-clip:text;
-    animation:shimmer 5s linear infinite;
+    overflow:hidden;
   }
-  @keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
+  .scatter-word::before {
+    content:'';
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0.02em;
+    height:0.055em;
+    border-radius:999px;
+    background:linear-gradient(90deg, transparent 0%, var(--accent2) 18%, var(--accent) 82%, transparent 100%);
+    transform:scaleX(0);
+    transform-origin:left center;
+    animation:underlineTrace 1.05s cubic-bezier(.2,.8,.2,1) 0.45s forwards;
+  }
+  .scatter-word::after {
+    content:'';
+    position:absolute;
+    inset:-0.14em -18%;
+    background:linear-gradient(105deg, transparent 34%, rgba(255,255,255,0.72) 47%, rgba(47,109,246,0.26) 52%, transparent 66%);
+    transform:translateX(-125%);
+    animation:labScan 1.35s cubic-bezier(.2,.8,.2,1) 0.55s both;
+    pointer-events:none;
+  }
+  @keyframes labScan {
+    0% { transform:translateX(-125%); opacity:0; }
+    18% { opacity:1; }
+    100% { transform:translateX(125%); opacity:0; }
+  }
+  @keyframes underlineTrace {
+    0% { transform:scaleX(0); opacity:0.25; }
+    100% { transform:scaleX(1); opacity:1; }
+  }
 
   .hero-sub {
     font-size:clamp(0.9rem,2vw,1.1rem); color:var(--muted);
@@ -131,14 +205,62 @@
     margin-top:40px; animation:fadeUp 0.8s ease 0.45s both;
   }
 
+  .hero::before {
+    content:'';
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at 78% 22%, rgba(47,109,246,0.10), transparent 28%),
+               radial-gradient(circle at 50% 0%, rgba(47,109,246,0.05), transparent 34%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .hero h1 { max-width: 980px; margin:0 auto; position:relative; }
+  .hero-sub { max-width: 620px; }
+
+  .catalog-controls {
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:18px;
+    box-shadow:var(--shadow-soft);
+  }
+
+  .catalog-group {
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:0 18px 6px;
+    margin-bottom:18px;
+    box-shadow:var(--shadow-soft);
+  }
+
+  .catalog-group-header {
+    padding:18px 2px 12px;
+    border-bottom:1px solid var(--border);
+  }
+
+  .catalog-table th { background:#f8fbff; }
+  .catalog-table td { padding:14px 16px; }
+  .catalog-table tr:hover td { background:#f8fbff; }
+  .product-name { min-width: 110px; }
+  .dose-pill.selected { background:linear-gradient(135deg, var(--accent2) 0%, var(--accent) 100%); color:#fff; border-color:var(--accent2); }
+  .product-code { border-color:var(--border2); }
+
+  .quality-stat, .quality-table-wrap, .quality-empty, .quality-card { box-shadow:var(--shadow-soft); border-radius:14px; }
+  .quality-table th { background:#f8fbff; }
+  .quality-table tr:hover td { background:#f8fbff; }
+  .quality-code { border-color:var(--border2); background:var(--accent-soft); }
+  .quality-status { color:var(--text); }
+
   .btn-primary {
     display:inline-flex; align-items:center; gap:8px;
-    background:var(--text); color:var(--bg);
+    background:linear-gradient(135deg, var(--accent2) 0%, var(--accent) 100%); color:#fff;
     font-weight:700; font-size:0.8rem; letter-spacing:0.1em;
     padding:13px 30px; border-radius:2px; text-decoration:none;
     transition:all 0.2s; text-transform:uppercase;
   }
-  .btn-primary:hover { background:#333; transform:translateY(-2px); }
+  .btn-primary:hover { background:linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%); transform:translateY(-2px); box-shadow:0 12px 28px rgba(47, 109, 246, 0.22); }
 
   .btn-secondary {
     display:inline-flex; align-items:center; gap:8px;
@@ -147,7 +269,7 @@
     padding:12px 26px; border-radius:2px; text-decoration:none;
     border:1px solid var(--border2); transition:all 0.2s; text-transform:uppercase;
   }
-  .btn-secondary:hover { border-color:var(--text); color:var(--text); transform:translateY(-2px); }
+  .btn-secondary:hover { border-color:var(--accent); color:var(--accent); transform:translateY(-2px); background:var(--surface); }
 
   @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
 
@@ -182,10 +304,11 @@
   section { position:relative; z-index:1; }
   .section-inner { max-width:1160px; margin:0 auto; padding:80px 24px; }
   .section-label { font-size:0.65rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; display:flex; align-items:center; gap:12px; }
-  .section-label::before { content:''; display:block; width:28px; height:1px; background:var(--border2); }
+  .section-label::before { content:''; display:block; width:28px; height:1px; background:var(--accent); }
   .section-title { font-size:clamp(1.7rem,4vw,2.6rem); font-weight:900; line-height:1.1; margin-bottom:14px; }
-  .section-title span { color:var(--muted); }
+  .section-title span { color:var(--text); }
   .section-desc { color:var(--muted); max-width:520px; line-height:1.85; font-size:0.88rem; }
+  .hero-sub, .section-desc, .quality-sub, .testing-list, .quality-status, .form-subtitle, .form-note, .trust-item p, .step p { color:var(--muted); }
 
   /* ── CATALOG ── */
   #catalog { background:var(--surface); border-top:1px solid var(--border); }
@@ -203,10 +326,10 @@
     text-transform:uppercase; padding:6px 13px; border-radius:2px;
     cursor:pointer; transition:all 0.2s; font-family:inherit;
   }
-  .filter-btn:hover { border-color:var(--border2); color:var(--text); }
-  .filter-btn.active { border-color:var(--text); color:var(--text); background:var(--surface2); font-weight:600; }
-  .filter-btn.bestseller { border-color:var(--text); background:var(--text); color:var(--bg); }
-  .filter-btn.bestseller:hover { background:#333; }
+  .filter-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-soft); }
+  .filter-btn.active { border-color:var(--accent); color:var(--accent2); background:var(--accent-soft); font-weight:700; }
+  .filter-btn.bestseller { border-color:var(--accent2); background:linear-gradient(135deg, var(--accent2) 0%, var(--accent) 100%); color:#fff; }
+  .filter-btn.bestseller:hover { background:linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%); }
 
   .search-box {
     background:var(--surface); border:1px solid var(--border);
@@ -214,7 +337,7 @@
     border-radius:2px; outline:none; width:200px; font-family:inherit;
     transition:border-color 0.2s;
   }
-  .search-box:focus { border-color:var(--text); }
+  .search-box:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(47, 109, 246, 0.12); }
   .search-box::placeholder { color:var(--muted2); }
 
   .coa-toggle-wrap { display:flex; align-items:center; gap:9px; flex-shrink:0; }
@@ -239,9 +362,13 @@
   .catalog-group { margin-bottom:32px; }
 
   .catalog-group-header {
-    display:flex; align-items:center; gap:14px;
-    padding:10px 0; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:14px; width:100%;
+    padding:10px 0; border:0; border-bottom:1px solid var(--border);
     margin-bottom:0; cursor:pointer; user-select:none;
+    background:transparent; font:inherit; text-align:left; color:inherit;
+  }
+  .catalog-group-header:focus-visible, .hamburger:focus-visible, .dose-pill:focus-visible, .order-btn:focus-visible, .filter-btn:focus-visible, .submit-btn:focus-visible {
+    outline:2px solid var(--accent); outline-offset:3px;
   }
   .catalog-group-header h3 { font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); font-weight:700; flex:1; }
   .group-count { font-size:0.65rem; color:var(--muted2); letter-spacing:0.06em; }
@@ -291,8 +418,8 @@
   .price-cell .price-sub { font-size:0.68rem; color:var(--muted2); font-weight:400; display:block; margin-top:1px; }
 
   .stock-badge { font-size:0.62rem; letter-spacing:0.06em; text-transform:uppercase; padding:3px 8px; border-radius:2px; font-weight:600; }
-  .stock-in { background:var(--surface2); color:var(--muted); border:1px solid var(--border); }
-  .stock-low { background:var(--surface2); color:var(--text); border:1px solid var(--border2); font-style:italic; }
+  .stock-in { background:var(--accent-soft); color:var(--accent2); border:1px solid var(--border2); }
+  .stock-low { background:#fff7d7; color:#7a5a12; border:1px solid #e5cf82; font-style:italic; }
 
   .coa-cell { display:none; }
   .coa-visible .coa-cell { display:table-cell; }
@@ -314,11 +441,54 @@
 
   .no-results { text-align:center; padding:60px 20px; color:var(--muted); font-size:0.88rem; display:none; }
 
+
+
+  /* ── COA / QUALITY TRANSPARENCY ── */
+  #quality { background:var(--bg); border-top:1px solid var(--border); }
+  .quality-head { display:flex; justify-content:space-between; gap:28px; align-items:flex-end; flex-wrap:wrap; }
+  .quality-summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin:34px 0 24px; }
+  .quality-stat { background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:18px 16px; }
+  .quality-stat strong { display:block; font-size:1.35rem; color:var(--text); line-height:1; }
+  .quality-stat span { display:block; margin-top:7px; font-size:0.65rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; }
+  .quality-disclaimer { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:10px; padding:16px 18px; color:var(--muted); line-height:1.7; font-size:0.78rem; margin:24px 0; box-shadow:var(--shadow-soft); }
+  .quality-controls { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:28px 0 18px; }
+  .quality-search { min-width:260px; flex:1; }
+  .quality-select { max-width:190px; }
+  .quality-filters { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:22px; }
+  .quality-table-wrap { background:var(--surface); border:1px solid var(--border); border-radius:3px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .quality-table { width:100%; min-width:1020px; border-collapse:collapse; font-size:0.78rem; }
+  .quality-table th { padding:11px 14px; text-align:left; font-size:0.6rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted2); border-bottom:1px solid var(--border); font-weight:700; background:var(--surface); }
+  .quality-table td { padding:13px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  .quality-table tr:last-child td { border-bottom:none; }
+  .quality-table tr:hover td { background:var(--surface2); }
+  .quality-product { font-weight:800; color:var(--text); margin-bottom:3px; }
+  .quality-sub { color:var(--muted); font-size:0.7rem; line-height:1.5; }
+  .quality-code { font-family:monospace; font-size:0.7rem; color:var(--text); background:var(--surface2); border:1px solid var(--border); padding:3px 7px; border-radius:2px; display:inline-block; margin-top:4px; }
+  .testing-matrix { display:grid; grid-template-columns:repeat(5,minmax(56px,1fr)); gap:0; min-width:360px; border:1px solid var(--border); border-radius:10px; overflow:hidden; background:#f8fbff; }
+  .testing-matrix-cell { padding:8px 7px; border-right:1px solid var(--border); text-align:center; }
+  .testing-matrix-cell:last-child { border-right:0; }
+  .testing-matrix-label { display:block; color:var(--muted2); font-size:0.54rem; letter-spacing:0.08em; text-transform:uppercase; font-weight:800; margin-bottom:4px; }
+  .testing-matrix-value { display:inline-flex; align-items:center; justify-content:center; min-width:24px; height:22px; font-size:0.68rem; font-weight:900; color:var(--text); }
+  .testing-matrix-cell.ok .testing-matrix-value { color:var(--accent2); }
+  .testing-matrix-cell.muted .testing-matrix-value { color:var(--muted2); }
+  .testing-matrix-cell.nd .testing-matrix-value { color:var(--accent2); }
+  .status-rail { display:grid; gap:10px; padding:4px 0; }
+  .status-rail-item { display:grid; grid-template-columns:11px 1fr; gap:10px; align-items:start; text-align:left; }
+  .status-rail-dot { width:8px; height:8px; margin-top:4px; border-radius:2px; background:var(--border2); }
+  .status-rail-item.ok .status-rail-dot, .status-rail-item.nd .status-rail-dot { background:var(--accent); }
+  .status-rail-title { display:block; font-size:0.68rem; color:var(--text); font-weight:800; letter-spacing:0.02em; }
+  .status-rail-detail { display:block; margin-top:2px; font-size:0.68rem; color:var(--muted); line-height:1.35; }
+  .testing-list { color:var(--muted); line-height:1.55; font-size:0.72rem; }
+  .quality-status { color:var(--muted); line-height:1.55; font-size:0.72rem; max-width:240px; }
+  .quality-cards { display:none; }
+  .quality-empty { display:none; text-align:center; padding:40px 18px; color:var(--muted); background:var(--surface); border:1px solid var(--border); border-radius:3px; }
+  .quality-update-note { margin-top:18px; color:var(--muted2); font-size:0.72rem; line-height:1.65; }
+
   /* ── TRUST ── */
   .trust-section { border-top:1px solid var(--border); border-bottom:1px solid var(--border); background:var(--bg); }
   .trust-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:32px; margin-top:48px; }
   .trust-item { display:flex; flex-direction:column; gap:10px; }
-  .trust-icon { width:40px; height:40px; background:var(--surface2); border:1px solid var(--border); border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:900; letter-spacing:0.04em; color:var(--text); }
+  .trust-icon { width:40px; height:40px; background:var(--accent-soft); border:1px solid var(--border2); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:900; letter-spacing:0.04em; color:var(--accent2); }
   .trust-item h4 { font-size:0.88rem; font-weight:700; }
   .trust-item p { font-size:0.78rem; color:var(--muted); line-height:1.65; }
 
@@ -391,7 +561,33 @@
     .form-grid { grid-template-columns:1fr; }
     .form-wrapper { padding:26px 18px; }
     body { cursor:auto; }
-    #cursor, #cursor-ring, #trail-canvas { display:none; }
+    #cursor, #cursor-ring, #trail-canvas, .molecule-canvas { display:none; }
+    .catalog-controls { padding:14px; border-radius:12px; }
+    .catalog-group { padding:0 12px 4px; border-radius:12px; }
+    .catalog-group > div { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .catalog-table { min-width:720px; }
+
+    .quality-table-wrap { display:none; }
+    .quality-cards { display:grid; gap:14px; }
+    .quality-card { background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:18px 16px; }
+    .quality-card + .quality-card { margin-top:0; }
+    .quality-card-row { display:flex; justify-content:space-between; gap:12px; padding:9px 0; border-bottom:1px solid var(--border); }
+    .quality-card-row:last-child { border-bottom:0; }
+    .quality-card-label { color:var(--muted2); font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:700; }
+    .quality-card-value { text-align:right; color:var(--text); font-size:0.78rem; line-height:1.5; }
+    .quality-controls { align-items:stretch; }
+    .quality-search, .quality-select { width:100%; max-width:none; }
+
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior:auto; }
+    *, *::before, *::after {
+      animation-duration:0.01ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:0.01ms !important;
+    }
+    #trail-canvas, .molecule-canvas { display:none; }
   }
 </style>
 </head>
@@ -407,21 +603,25 @@
   <ul id="navLinks">
     <li><a href="#catalog">Catalog</a></li>
     <li><a href="#how">Process</a></li>
-    <li><a href="#trust">Quality</a></li>
+    <li><a href="#quality">Verified Testing</a></li>
     <li><a href="#order" class="nav-cta">Order Now</a></li>
   </ul>
-  <div class="hamburger" id="hamburger" onclick="toggleNav()"><span></span><span></span><span></span></div>
+  <button type="button" class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Open navigation menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
 </nav>
 
 <!-- HERO -->
 <section class="hero" style="position:relative; overflow:hidden;">
-  <canvas id="molecule-canvas"></canvas>
+  <canvas id="molecule-canvas" class="molecule-canvas molecule-primary" aria-hidden="true"></canvas>
+  <canvas id="molecule-canvas-2" class="molecule-canvas molecule-secondary" aria-hidden="true"></canvas>
+  <canvas id="molecule-canvas-3" class="molecule-canvas molecule-tertiary" aria-hidden="true"></canvas>
+  <canvas id="molecule-canvas-4" class="molecule-canvas molecule-quaternary" aria-hidden="true"></canvas>
+  <canvas id="molecule-canvas-5" class="molecule-canvas molecule-quinary" aria-hidden="true"></canvas>
   <div class="hero-badge" style="position:relative;z-index:2;"><span class="badge-dot"></span> Research Grade · ISO Certified · Discreet Shipping</div>
   <h1 style="position:relative;z-index:2;">
     <span style="display:block">The Science of</span>
     <span class="scatter-word" id="scatterWord">Peak Performance</span>
   </h1>
-  <p class="hero-sub" style="position:relative;z-index:2;">Research-grade compounds sourced from ISO-certified manufacturers. Third-party CoA on every batch. Single-vial fulfillment.</p>
+  <p class="hero-sub" style="position:relative;z-index:2;">Research-grade compounds sourced from ISO-certified manufacturers. Verified testing data available in the quality section. Single-vial fulfillment.</p>
   <div class="hero-actions" style="position:relative;z-index:2;">
     <a href="#catalog" class="btn-primary">Browse Catalog</a>
     <a href="#order" class="btn-secondary">Place an Order</a>
@@ -473,7 +673,7 @@
   <div class="section-inner">
     <div class="section-label">Full Catalog</div>
     <h2 class="section-title">Research <span>Compounds</span></h2>
-    <p class="section-desc">Select a dose to see price per vial. All prices USD, single-vial only.</p>
+    <p class="section-desc">Select a strength to see price per vial. All prices USD, single-vial only.</p>
 
     <div class="catalog-controls">
       <div class="cat-filter">
@@ -500,15 +700,70 @@
   </div>
 </section>
 
+
+<!-- COA / QUALITY TRANSPARENCY -->
+<section id="quality">
+  <div class="section-inner">
+    <div class="quality-head">
+      <div>
+        <div class="section-label">Verified Third-party COA Data</div>
+        <h2 class="section-title">Verified COA &amp; <span>Quality Transparency</span></h2>
+        <p class="section-desc">Review verified third-party testing data for identity, purity, measured content, sterility, and endotoxin findings where provided.</p>
+      </div>
+    </div>
+
+    <div class="quality-summary" id="qualitySummary" aria-label="COA data summary"></div>
+
+    <div class="quality-disclaimer">
+      <strong>Research-quality transparency notice:</strong> COAs are provided for research-quality transparency only. All records shown below were verified against the source COA documentation provided for the submitted sample. These reports may verify identity, purity, measured content, sterility, and/or endotoxin findings for the submitted sample only where those tests are shown. They do not establish GMP manufacturing, FDA approval, or suitability for human or veterinary use.
+    </div>
+
+    <div class="quality-controls" aria-label="COA filters">
+      <input type="text" class="search-box quality-search" id="qualitySearch" placeholder="Search verified record, accession, search code, purity, or testing status...">
+      <select class="quality-select" id="qualityPurityFilter" aria-label="Minimum purity filter">
+        <option value="all">All purity values</option>
+        <option value="99">99.0%+</option>
+        <option value="99.5">99.5%+</option>
+        <option value="99.8">99.8%+</option>
+      </select>
+    </div>
+
+    <div class="quality-filters" id="qualityConcernFilters" aria-label="Testing status filters">
+      <button type="button" class="filter-btn active" data-concern="all">All Testing Data</button>
+      <button type="button" class="filter-btn" data-concern="content-verified">Content Verified</button>
+      <button type="button" class="filter-btn" data-concern="sterility-shown">Sterility Shown</button>
+      <button type="button" class="filter-btn" data-concern="no-endotoxins-reported">No Endotoxins Reported</button>
+    </div>
+
+    <div class="quality-table-wrap" id="qualityTableWrap">
+      <table class="quality-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Accession</th>
+            <th>Purity / Identity</th>
+            <th>Measured Content</th>
+            <th>Sterility / Endotoxin</th>
+            <th>Testing Matrix</th>
+          </tr>
+        </thead>
+        <tbody id="qualityTableBody"></tbody>
+      </table>
+    </div>
+    <div class="quality-cards" id="qualityCards"></div>
+    <div class="quality-empty" id="qualityEmpty">No COA records match your filters.</div>
+  </div>
+</section>
+
 <!-- TRUST -->
 <section id="trust" class="trust-section">
   <div class="section-inner">
     <div class="section-label">Why Pinnacle</div>
     <h2 class="section-title">Built for <span>Serious</span> Researchers</h2>
-    <p class="section-desc">Every compound is third-party verified before it ships.</p>
+    <p class="section-desc">Available testing documentation is shown for transparency where provided.</p>
     <div class="trust-grid">
       <div class="trust-item"><div class="trust-icon">ISO</div><h4>ISO-Certified Sourcing</h4><p>Manufactured in ISO 9001-certified facilities. Full batch traceability and documented chain of custody.</p></div>
-      <div class="trust-item"><div class="trust-icon">99%</div><h4>Purity Guaranteed</h4><p>HPLC-verified CoA testing on every batch. Documentation available on request for any compound.</p></div>
+      <div class="trust-item"><div class="trust-icon">99%</div><h4>Purity Documentation</h4><p>HPLC purity data is displayed when available. Documentation should be reviewed by accession number and source.</p></div>
       <div class="trust-item"><div class="trust-icon">PKG</div><h4>Discreet Packaging</h4><p>Unmarked packaging with no identifying labels. Your research is private. No third-party data sharing.</p></div>
       <div class="trust-item"><div class="trust-icon">XMR</div><h4>Privacy-First Payments</h4><p>Monero, BTC, ETH, USDC. Zelle and Cash App available for established buyers.</p></div>
       <div class="trust-item"><div class="trust-icon">0°C</div><h4>Cold-Chain Capable</h4><p>Temperature-sensitive compounds shipped with appropriate insulation and cold packs.</p></div>
@@ -524,10 +779,10 @@
     <h2 class="section-title">How <span>Ordering</span> Works</h2>
     <p class="section-desc">No account. No checkout cart. Fully private from start to finish.</p>
     <div class="steps">
-      <div class="step"><div class="step-num">1</div><h4>Submit Request</h4><p>Fill out the order form with compound(s), dosage(s), and quantity. No commitment yet.</p></div>
+      <div class="step"><div class="step-num">1</div><h4>Submit Request</h4><p>Fill out the order form with compound(s), strength(s), and quantity. No commitment yet.</p></div>
       <div class="step"><div class="step-num">2</div><h4>Receive Invoice</h4><p>Custom invoice sent via email or Telegram within 24 hours with payment instructions.</p></div>
       <div class="step"><div class="step-num">3</div><h4>Confirm Payment</h4><p>Pay and send your TX ID or confirmation. Verified same day.</p></div>
-      <div class="step"><div class="step-num">4</div><h4>Ships Discreetly</h4><p>Unmarked packaging, full tracking. CoA included for every compound.</p></div>
+      <div class="step"><div class="step-num">4</div><h4>Ships Discreetly</h4><p>Unmarked packaging and tracking. Testing documentation is provided where available.</p></div>
     </div>
   </div>
 </section>
@@ -546,13 +801,13 @@
           <input type="hidden" name="form-name" value="order-request">
           <p style="display:none"><label>Don't fill this out: <input name="bot-field"></label></p>
           <div class="form-grid">
-            <div class="form-group"><label>First Name *</label><input type="text" name="firstName" placeholder="John" required></div>
-            <div class="form-group"><label>Last Name *</label><input type="text" name="lastName" placeholder="Doe" required></div>
-            <div class="form-group full"><label>Email Address *</label><input type="email" name="email" placeholder="research@email.com" required></div>
-            <div class="form-group full"><label>Telegram / Signal (optional)</label><input type="text" name="telegram" placeholder="@yourhandle"></div>
-            <div class="form-group full"><label>Compound(s) &amp; Dosage(s) *</label><input type="text" name="compound" placeholder="e.g. Semaglutide 5mg x1, BPC-157 10mg x1" required></div>
-            <div class="form-group"><label>Preferred Payment</label>
-              <select name="payment">
+            <div class="form-group"><label for="firstName">First Name *</label><input id="firstName" type="text" name="firstName" placeholder="John" autocomplete="given-name" required></div>
+            <div class="form-group"><label for="lastName">Last Name *</label><input id="lastName" type="text" name="lastName" placeholder="Doe" autocomplete="family-name" required></div>
+            <div class="form-group full"><label for="email">Email Address *</label><input id="email" type="email" name="email" placeholder="research@email.com" autocomplete="email" required></div>
+            <div class="form-group full"><label for="telegram">Telegram / Signal (optional)</label><input id="telegram" type="text" name="telegram" placeholder="@yourhandle"></div>
+            <div class="form-group full"><label for="compound">Compound(s) &amp; Strength(s) *</label><input id="compound" type="text" name="compound" placeholder="e.g. Retatrutide 10mg x1, BPC-157 10mg x1" required></div>
+            <div class="form-group"><label for="payment">Preferred Payment</label>
+              <select id="payment" name="payment">
                 <option value="">Select...</option>
                 <option value="XMR">Monero (XMR) — Most Private</option>
                 <option value="BTC">Bitcoin (BTC)</option>
@@ -562,10 +817,10 @@
                 <option value="CashApp">Cash App (returning buyers)</option>
               </select>
             </div>
-            <div class="form-group"><label>Shipping State / Country</label><input type="text" name="location" placeholder="e.g. TX, USA"></div>
-            <div class="form-group full"><label>Notes / Protocol Questions</label><textarea name="notes" placeholder="Dosage questions, stacking, special handling..."></textarea></div>
+            <div class="form-group"><label for="location">Shipping State / Country</label><input id="location" type="text" name="location" placeholder="e.g. TX, USA" autocomplete="address-level1"></div>
+            <div class="form-group full"><label for="notes">Notes / Fulfillment Details</label><textarea id="notes" name="notes" placeholder="Quantity, documentation requests, shipping notes..."></textarea></div>
           </div>
-          <div class="form-note">Information used solely to process your request. No data retained beyond fulfillment. Consider ProtonMail or Tutanota for added privacy.</div>
+          <div class="form-note">Information used solely to process your request. Product, quantity, documentation, and fulfillment details only. No medical, dosing, or protocol guidance is provided.</div>
           <button type="submit" class="submit-btn">Submit Request — Get Invoice</button>
         </form>
       </div>
@@ -646,6 +901,7 @@ CAT_ORDER.forEach(c => openGroups[c] = true);
 const selDose = {};
 
 function fmt(p) { return '$' + p.toFixed(2); }
+function safeId(value) { return String(value).replace(/[^a-z0-9_-]/gi, '_'); }
 
 function renderCatalog() {
   const container = document.getElementById('catalogContainer');
@@ -672,19 +928,21 @@ function renderCatalog() {
     const items = grouped[cat];
     if (!items.length) return;
     const isOpen = openGroups[cat];
+    const catId = safeId(cat);
     html += `<div class="catalog-group" data-cat="${cat}">
-      <div class="catalog-group-header" onclick="toggleGroup('${cat}')">
+      <button type="button" class="catalog-group-header" onclick="toggleGroup('${cat}')" aria-expanded="${isOpen}" aria-controls="group-${catId}">
         <h3>${CAT_LABELS[cat]}</h3>
         <span class="group-count">${items.length} compounds</span>
-        <span class="group-chevron ${isOpen?'open':''}" id="chev-${cat}">&#9660;</span>
-      </div>
-      <div id="group-${cat}" style="display:${isOpen?'block':'none'}">
+        <span class="group-chevron ${isOpen?'open':''}" id="chev-${catId}" aria-hidden="true">&#9660;</span>
+      </button>
+      <div id="group-${catId}" style="display:${isOpen?'block':'none'}">
         <table class="catalog-table${showCoa?' coa-visible':''}">
           <thead><tr>
             <th>Compound</th>
-            <th>Dose</th>
+            <th>Strength</th>
             <th>SKU Code</th>
             <th>Price / Vial</th>
+            <th>Stock</th>
             ${showCoa?'<th class="coa-cell">CoA</th>':''}
             <th></th>
           </tr></thead>
@@ -701,7 +959,7 @@ function renderCatalog() {
         : '<span class="stock-badge stock-low">Limited</span>';
 
       const pillsHtml = compound.doses.map((dose, idx) =>
-        `<button class="dose-pill${idx===di?' selected':''}" onclick="selectDose('${id}','${cat}',${idx})">${dose.s}</button>`
+        `<button type="button" class="dose-pill${idx===di?' selected':''}" onclick="selectDose('${id}','${cat}',${idx})">${dose.s}</button>`
       ).join('');
 
       html += `<tr id="row-${id}">
@@ -709,8 +967,9 @@ function renderCatalog() {
         <td><div class="dose-pills">${pillsHtml}</div></td>
         <td><span class="product-code" id="sku-${id}">${d.c}</span></td>
         <td class="price-cell" id="price-${id}">${fmt(pricePerVial)}</td>
+        <td id="stock-${id}">${stockHtml}</td>
         ${showCoa?`<td class="coa-cell"><a href="#order" class="coa-link" onclick="prefillCompound('${compound.name} ${d.s}')">Request</a></td>`:''}
-        <td><button class="order-btn" onclick="prefillCompound('${compound.name} ${d.s}')">Order</button></td>
+        <td><button type="button" class="order-btn" onclick="prefillCompound('${compound.name} ${d.s}')">Order</button></td>
       </tr>`;
     });
 
@@ -729,26 +988,37 @@ function selectDose(id, cat, idx) {
   // Update SKU + price in place
   const skuEl = document.getElementById('sku-'+id);
   const priceEl = document.getElementById('price-'+id);
+  const stockEl = document.getElementById('stock-'+id);
   if (skuEl) skuEl.textContent = d.c;
   if (priceEl) priceEl.textContent = fmt(d.p);
+  if (stockEl) {
+    stockEl.innerHTML = d.st === 'in'
+      ? '<span class="stock-badge stock-in">In Stock</span>'
+      : '<span class="stock-badge stock-low">Limited</span>';
+  }
   // Update pill selection
   const row = document.getElementById('row-'+id);
   if (row) {
     row.querySelectorAll('.dose-pill').forEach((pill, i) => {
       pill.classList.toggle('selected', i === idx);
     });
-    // Update order button
+    // Update order and CoA request actions
     const btn = row.querySelector('.order-btn');
+    const coa = row.querySelector('.coa-link');
     if (btn) btn.onclick = () => prefillCompound(compound.name + ' ' + d.s);
+    if (coa) coa.onclick = () => prefillCompound(compound.name + ' ' + d.s);
   }
 }
 
 function toggleGroup(cat) {
   openGroups[cat] = !openGroups[cat];
-  const grp = document.getElementById('group-'+cat);
-  const chev = document.getElementById('chev-'+cat);
+  const catId = safeId(cat);
+  const grp = document.getElementById('group-'+catId);
+  const chev = document.getElementById('chev-'+catId);
+  const header = chev ? chev.closest('.catalog-group-header') : null;
   if (grp) grp.style.display = openGroups[cat] ? 'block' : 'none';
   if (chev) chev.className = 'group-chevron' + (openGroups[cat]?' open':'');
+  if (header) header.setAttribute('aria-expanded', String(openGroups[cat]));
 }
 
 function prefillCompound(name) {
@@ -760,9 +1030,9 @@ function prefillCompound(name) {
   }
 }
 
-document.querySelectorAll('.filter-btn').forEach(btn => {
+document.querySelectorAll('#catalog .filter-btn[data-cat]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#catalog .filter-btn[data-cat]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     activeFilter = btn.dataset.cat;
     renderCatalog();
@@ -781,139 +1051,600 @@ document.getElementById('coaToggle').addEventListener('change', e => {
 
 renderCatalog();
 
-// ── SCATTER TEXT ──────────────────────────────────────────────────────────────
-const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@$%';
-const targetText = 'Peak Performance';
-const scatterEl = document.getElementById('scatterWord');
-let sFrame = 0;
-const sDur = 38;
-
-function scramble() {
-  let out = '';
-  for (let i = 0; i < targetText.length; i++) {
-    if (targetText[i] === ' ') { out += ' '; continue; }
-    if (sFrame > (i / targetText.length) * sDur) {
-      out += targetText[i];
-    } else {
-      const r = CHARS[Math.floor(Math.random() * CHARS.length)];
-      out += `<span style="opacity:${0.15+Math.random()*0.4};color:#888">${r}</span>`;
-    }
+// ── COA / QUALITY TRANSPARENCY DATA ─────────────────────────────────────────
+const COA_DATA = [
+  {
+    "product": "NAD+",
+    "doseLabel": "1000mg",
+    "claimedTotalMg": 1000,
+    "measuredContentMg": 1184.7,
+    "accessionNumber": "2603230193",
+    "searchCode": "ASCN2603230193",
+    "client": "ASCNT Wellness LLC",
+    "receivedDate": "03/23/2026",
+    "reportedDate": "03/24/2026",
+    "lotDescriptor": "Black Cap",
+    "purityPercent": 99.892,
+    "appearance": "White Lyophilized Powder",
+    "identity": "NAD+",
+    "testingScope": [
+      "HPLC purity",
+      "LC-MS identity",
+      "Net peptide content shown"
+    ],
+    "sterility": "Sterility testing shown on COA",
+    "endotoxin": "No endotoxins reported by testing agency",
+    "heavyMetals": "Not shown on COA",
+    "residualSolvents": "Not shown on COA"
+  },
+  {
+    "product": "KPV",
+    "doseLabel": "10mg",
+    "claimedTotalMg": 10,
+    "measuredContentMg": 9.4,
+    "accessionNumber": "2603230194",
+    "searchCode": "ASCN2603230194",
+    "client": "ASCNT Wellness LLC",
+    "receivedDate": "03/23/2026",
+    "reportedDate": "03/24/2026",
+    "lotDescriptor": "Purple Cap",
+    "purityPercent": 99.061,
+    "appearance": "White Lyophilized Powder",
+    "identity": "KPV",
+    "testingScope": [
+      "HPLC purity",
+      "LC-MS identity",
+      "Net peptide content shown"
+    ],
+    "sterility": "Sterility testing shown on COA",
+    "endotoxin": "No endotoxins reported by testing agency",
+    "heavyMetals": "Not shown on COA",
+    "residualSolvents": "Not shown on COA"
+  },
+  {
+    "product": "Retatrutide",
+    "doseLabel": "10mg",
+    "claimedTotalMg": 10,
+    "measuredContentMg": 10.28,
+    "accessionNumber": "2603230195",
+    "searchCode": "ASCN2603230195",
+    "client": "ASCNT Wellness LLC",
+    "receivedDate": "03/23/2026",
+    "reportedDate": "03/24/2026",
+    "lotDescriptor": "Clear Blue Cap",
+    "purityPercent": 99.84,
+    "appearance": "White Lyophilized Powder",
+    "identity": "GLP RT",
+    "testingScope": [
+      "HPLC purity",
+      "LC-MS identity",
+      "Net peptide content shown"
+    ],
+    "sterility": "Sterility testing shown on COA",
+    "endotoxin": "No endotoxins reported by testing agency",
+    "heavyMetals": "Not shown on COA",
+    "residualSolvents": "Not shown on COA"
+  },
+  {
+    "product": "Retatrutide",
+    "doseLabel": "20mg",
+    "claimedTotalMg": 20,
+    "measuredContentMg": 19.87,
+    "accessionNumber": "2603230196",
+    "searchCode": "ASCN2603230196",
+    "client": "ASCNT Wellness LLC",
+    "receivedDate": "03/23/2026",
+    "reportedDate": "03/24/2026",
+    "lotDescriptor": "White Cap",
+    "purityPercent": 99.841,
+    "appearance": "White Lyophilized Powder",
+    "identity": "GLP RT",
+    "testingScope": [
+      "HPLC purity",
+      "LC-MS identity",
+      "Net peptide content shown"
+    ],
+    "sterility": "Sterility testing shown on COA",
+    "endotoxin": "No endotoxins reported by testing agency",
+    "heavyMetals": "Not shown on COA",
+    "residualSolvents": "Not shown on COA"
+  },
+  {
+    "product": "CJC-1295 NO DAC + Ipamorelin",
+    "doseLabel": "5mg/5mg",
+    "claimedActives": [
+      {
+        "name": "Ipamorelin",
+        "claimedMg": 5,
+        "measuredMg": 6.87
+      },
+      {
+        "name": "CJC-1295",
+        "claimedMg": 5,
+        "measuredMg": 5.33
+      }
+    ],
+    "claimedTotalMg": 10,
+    "measuredContentMg": 12.2,
+    "accessionNumber": "2603230197",
+    "searchCode": "ASCN2603230197",
+    "client": "ASCNT Wellness LLC",
+    "receivedDate": "03/23/2026",
+    "reportedDate": "03/24/2026",
+    "lotDescriptor": "Blue Cap",
+    "purityPercent": 99.915,
+    "appearance": "White Lyophilized Powder",
+    "identity": "Ipamorelin/CJC-1295",
+    "testingScope": [
+      "HPLC purity",
+      "LC-MS identity",
+      "Net peptide content shown"
+    ],
+    "sterility": "Sterility testing shown on COA",
+    "endotoxin": "No endotoxins reported by testing agency",
+    "heavyMetals": "Not shown on COA",
+    "residualSolvents": "Not shown on COA"
+  },
+  {
+    "product": "MOTS-C",
+    "doseLabel": "40mg",
+    "claimedTotalMg": 40,
+    "measuredContentMg": 37.62,
+    "accessionNumber": "2603230198",
+    "searchCode": "ASCN2603230198",
+    "client": "ASCNT Wellness LLC",
+    "receivedDate": "03/23/2026",
+    "reportedDate": "03/24/2026",
+    "lotDescriptor": "White Cap",
+    "purityPercent": 99.545,
+    "appearance": "White Lyophilized Powder",
+    "identity": "MOTS-C",
+    "testingScope": [
+      "HPLC purity",
+      "LC-MS identity",
+      "Net peptide content shown"
+    ],
+    "sterility": "Sterility testing shown on COA",
+    "endotoxin": "No endotoxins reported by testing agency",
+    "heavyMetals": "Not shown on COA",
+    "residualSolvents": "Not shown on COA"
+  },
+  {
+    "product": "BPC-157 + TB-500",
+    "doseLabel": "10mg/10mg",
+    "claimedActives": [
+      {
+        "name": "BPC-157",
+        "claimedMg": 10,
+        "measuredMg": 10.95
+      },
+      {
+        "name": "Thymosin Beta-4",
+        "claimedMg": 10,
+        "measuredMg": 10.58
+      }
+    ],
+    "claimedTotalMg": 20,
+    "measuredContentMg": 21.53,
+    "accessionNumber": "2603230199",
+    "searchCode": "ASCN2603230199",
+    "client": "ASCNT Wellness LLC",
+    "receivedDate": "03/23/2026",
+    "reportedDate": "03/24/2026",
+    "lotDescriptor": "Purple Cap",
+    "purityPercent": 99.588,
+    "appearance": "White Lyophilized Powder",
+    "identity": "BPC-157/Thymosin Beta-4",
+    "testingScope": [
+      "HPLC purity",
+      "LC-MS identity",
+      "Net peptide content shown"
+    ],
+    "sterility": "Sterility testing shown on COA",
+    "endotoxin": "No endotoxins reported by testing agency",
+    "heavyMetals": "Not shown on COA",
+    "residualSolvents": "Not shown on COA"
+  },
+  {
+    "product": "Tesamorelin",
+    "doseLabel": "10mg",
+    "claimedTotalMg": 10,
+    "measuredContentMg": 11.08,
+    "accessionNumber": "2603230200",
+    "searchCode": "ASCN2603230200",
+    "client": "ASCNT Wellness LLC",
+    "receivedDate": "03/23/2026",
+    "reportedDate": "03/24/2026",
+    "lotDescriptor": "Black Cap",
+    "purityPercent": 99.298,
+    "appearance": "White Lyophilized Powder",
+    "identity": "Tesamorelin",
+    "testingScope": [
+      "HPLC purity",
+      "LC-MS identity",
+      "Net peptide content shown"
+    ],
+    "sterility": "Sterility testing shown on COA",
+    "endotoxin": "No endotoxins reported by testing agency",
+    "heavyMetals": "Not shown on COA",
+    "residualSolvents": "Not shown on COA"
+  },
+  {
+    "product": "IGF-1 LR3",
+    "doseLabel": "1mg",
+    "claimedTotalMg": 1,
+    "measuredContentMg": null,
+    "accessionNumber": "2603230201",
+    "searchCode": "ASCN2603230201",
+    "client": "ASCNT Wellness LLC",
+    "receivedDate": "03/23/2026",
+    "reportedDate": "03/24/2026",
+    "lotDescriptor": "Yellow Cap",
+    "purityPercent": 99.496,
+    "appearance": "White Lyophilized Powder",
+    "identity": "IGF-LR3",
+    "testingScope": [
+      "HPLC purity",
+      "LC-MS identity",
+      "Net peptide content not requested"
+    ],
+    "sterility": "Sterility testing shown on COA",
+    "endotoxin": "No endotoxins reported by testing agency",
+    "heavyMetals": "Not shown on COA",
+    "residualSolvents": "Not shown on COA"
+  },
+  {
+    "product": "GHK-Cu",
+    "doseLabel": "100mg",
+    "claimedTotalMg": 100,
+    "measuredContentMg": 105.92,
+    "accessionNumber": "2603230202",
+    "searchCode": "ASCN2603230202",
+    "client": "ASCNT Wellness LLC",
+    "receivedDate": "03/23/2026",
+    "reportedDate": "03/24/2026",
+    "lotDescriptor": "Purple Cap",
+    "purityPercent": 99.672,
+    "appearance": "Blue Lyophilized Powder",
+    "identity": "GHK-Cu",
+    "testingScope": [
+      "HPLC purity",
+      "LC-MS identity",
+      "Net peptide content shown"
+    ],
+    "sterility": "Sterility testing shown on COA",
+    "endotoxin": "No endotoxins reported by testing agency",
+    "heavyMetals": "Not shown on COA",
+    "residualSolvents": "Not shown on COA"
   }
-  scatterEl.innerHTML = out;
-  sFrame++;
-  if (sFrame < sDur + 5) requestAnimationFrame(scramble);
-  else { scatterEl.innerHTML = targetText; setTimeout(() => { sFrame = 0; scramble(); }, 9000); }
+];
+
+let qualitySearchQuery = '';
+let qualityConcernFilter = 'all';
+let qualityPurityFilter = 'all';
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
+  }[ch]));
 }
-setTimeout(scramble, 900);
 
-// ── 3D MOLECULE ───────────────────────────────────────────────────────────────
+function hasContent(record) {
+  return typeof record.measuredContentMg === 'number' && !Number.isNaN(record.measuredContentMg);
+}
+
+function testShown(record, field) {
+  return (record[field] || '').toLowerCase().includes('shown');
+}
+
+function endotoxinNotDetected(record) {
+  return (record.endotoxin || '').toLowerCase().includes('no endotoxins reported');
+}
+
+function identityPurityShown(record) {
+  const scope = (record.testingScope || []).join(' ').toLowerCase();
+  return scope.includes('hplc') || scope.includes('lc-ms');
+}
+
+function testingItems(record) {
+  return [
+    { key:'identity', label:'Identity', value:identityPurityShown(record) ? '✓' : '—', state:identityPurityShown(record) ? 'ok' : 'muted', detail:identityPurityShown(record) ? 'Identity/purity shown' : 'Not shown' },
+    { key:'purity', label:'Purity', value:Number(record.purityPercent) ? '✓' : '—', state:Number(record.purityPercent) ? 'ok' : 'muted', detail:Number(record.purityPercent) ? `${Number(record.purityPercent).toFixed(3)}% purity shown` : 'Not shown' },
+    { key:'content', label:'Content', value:hasContent(record) ? '✓' : 'NR', state:hasContent(record) ? 'ok' : 'muted', detail:hasContent(record) ? 'Measured content shown' : 'Net content not requested/shown' },
+    { key:'sterility', label:'Sterility', value:testShown(record, 'sterility') ? '✓' : '—', state:testShown(record, 'sterility') ? 'ok' : 'muted', detail:record.sterility || 'Not shown' },
+    { key:'endotoxin', label:'Endotoxin', value:endotoxinNotDetected(record) ? 'ND' : '—', state:endotoxinNotDetected(record) ? 'nd' : 'muted', detail:record.endotoxin || 'Not shown' }
+  ];
+}
+
+function testingMatrixHtml(record) {
+  return `<div class="testing-matrix" aria-label="Testing matrix">
+    ${testingItems(record).map(item => `
+      <div class="testing-matrix-cell ${item.state}">
+        <span class="testing-matrix-label">${escapeHtml(item.label)}</span>
+        <span class="testing-matrix-value">${escapeHtml(item.value)}</span>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function statusRailHtml(record) {
+  return `<div class="status-rail" aria-label="Testing status">
+    ${testingItems(record).map(item => `
+      <div class="status-rail-item ${item.state}">
+        <span class="status-rail-dot" aria-hidden="true"></span>
+        <span>
+          <span class="status-rail-title">${escapeHtml(item.label)}: ${escapeHtml(item.value)}</span>
+          <span class="status-rail-detail">${escapeHtml(item.detail)}</span>
+        </span>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function measuredContentText(record) {
+  if (!hasContent(record)) return 'Net content not shown on COA';
+  if (record.claimedActives && record.claimedActives.length) {
+    return record.claimedActives.map(active => `${active.name}: ${active.measuredMg}mg shown`).join(' / ');
+  }
+  return `${record.measuredContentMg}mg shown`;
+}
+
+function statusHtml(record) {
+  return `<div class="quality-status">Sterility: ${escapeHtml(record.sterility)}<br>Endotoxin: ${escapeHtml(record.endotoxin)}</div>`;
+}
+
+function recordMatchesConcern(record) {
+  switch (qualityConcernFilter) {
+    case 'content-verified': return hasContent(record);
+    case 'sterility-shown': return (record.sterility || '').toLowerCase().includes('shown');
+    case 'no-endotoxins-reported': return (record.endotoxin || '').toLowerCase().includes('no endotoxins reported');
+    default: return true;
+  }
+}
+
+function recordMatchesSearch(record) {
+  if (!qualitySearchQuery) return true;
+  const q = qualitySearchQuery.toLowerCase();
+  const haystack = [
+    record.product,
+    record.doseLabel,
+    record.accessionNumber,
+    record.searchCode,
+    record.client,
+    record.lotDescriptor,
+    record.identity,
+    record.appearance,
+    record.purityPercent,
+    record.sterility,
+    record.endotoxin,
+    record.heavyMetals,
+    record.residualSolvents,
+    ...(record.testingScope || []),
+    ...((record.claimedActives || []).map(active => active.name))
+  ].filter(Boolean).join(' ').toLowerCase();
+  return haystack.includes(q);
+}
+
+function recordMatchesPurity(record) {
+  if (qualityPurityFilter === 'all') return true;
+  return Number(record.purityPercent) >= Number(qualityPurityFilter);
+}
+
+function filteredCoaData() {
+  return COA_DATA.filter(record => recordMatchesSearch(record) && recordMatchesConcern(record) && recordMatchesPurity(record));
+}
+
+function renderQualitySummary() {
+  const summary = document.getElementById('qualitySummary');
+  if (!summary) return;
+  const contentShown = COA_DATA.filter(hasContent).length;
+  const sterilityShown = COA_DATA.filter(r => (r.sterility || '').toLowerCase().includes('shown')).length;
+  const noEndotoxinsReported = COA_DATA.filter(r => (r.endotoxin || '').toLowerCase().includes('no endotoxins reported')).length;
+  summary.innerHTML = `
+    <div class="quality-stat"><strong>${COA_DATA.length}</strong><span>Verified records</span></div>
+    <div class="quality-stat"><strong>${contentShown}</strong><span>Content shown</span></div>
+    <div class="quality-stat"><strong>${sterilityShown}</strong><span>Sterility shown</span></div>
+    <div class="quality-stat"><strong>${noEndotoxinsReported}</strong><span>No endotoxins reported</span></div>
+  `;
+}
+
+function renderQuality() {
+  const tbody = document.getElementById('qualityTableBody');
+  const cards = document.getElementById('qualityCards');
+  const empty = document.getElementById('qualityEmpty');
+  const tableWrap = document.getElementById('qualityTableWrap');
+  if (!tbody || !cards || !empty || !tableWrap) return;
+
+  const records = filteredCoaData();
+  const hasRecords = records.length > 0;
+  empty.style.display = hasRecords ? 'none' : 'block';
+  tableWrap.style.display = hasRecords ? '' : 'none';
+  cards.style.display = hasRecords ? '' : 'none';
+
+  tbody.innerHTML = records.map(record => `
+    <tr>
+      <td>
+        <div class="quality-product">${escapeHtml(record.product)} ${escapeHtml(record.doseLabel)}</div>
+        <div class="quality-sub">Lot: ${escapeHtml(record.lotDescriptor)} · Reported ${escapeHtml(record.reportedDate)}</div>
+      </td>
+      <td>
+        <div>${escapeHtml(record.accessionNumber)}</div>
+        <span class="quality-code">${escapeHtml(record.searchCode)}</span>
+      </td>
+      <td>
+        <strong>${Number(record.purityPercent).toFixed(3)}%</strong>
+        <div class="quality-sub">Identity: ${escapeHtml(record.identity)}</div>
+        <div class="testing-list">${record.testingScope.map(escapeHtml).join('<br>')}</div>
+      </td>
+      <td>${escapeHtml(measuredContentText(record))}</td>
+      <td>${statusHtml(record)}</td>
+      <td>${testingMatrixHtml(record)}</td>
+    </tr>
+  `).join('');
+
+  cards.innerHTML = records.map(record => `
+    <article class="quality-card">
+      <div class="quality-product">${escapeHtml(record.product)} ${escapeHtml(record.doseLabel)}</div>
+      <div class="quality-sub">Lot: ${escapeHtml(record.lotDescriptor)} · Reported ${escapeHtml(record.reportedDate)}</div>
+      <div class="quality-card-row"><span class="quality-card-label">Accession</span><span class="quality-card-value">${escapeHtml(record.accessionNumber)}<br><span class="quality-code">${escapeHtml(record.searchCode)}</span></span></div>
+      <div class="quality-card-row"><span class="quality-card-label">Purity / Identity</span><span class="quality-card-value">${Number(record.purityPercent).toFixed(3)}%<br>${escapeHtml(record.identity)}</span></div>
+      <div class="quality-card-row"><span class="quality-card-label">Content</span><span class="quality-card-value">${escapeHtml(measuredContentText(record))}</span></div>
+      <div class="quality-card-row"><span class="quality-card-label">Sterility / Endotoxin</span><span class="quality-card-value">Sterility: ${escapeHtml(record.sterility)}<br>Endotoxin: ${escapeHtml(record.endotoxin)}</span></div>
+      <div class="quality-card-row"><span class="quality-card-label">Testing Status</span><span class="quality-card-value testing-status-value">${statusRailHtml(record)}</span></div>
+    </article>
+  `).join('');
+}
+
+function validateCoaData(records) {
+  const issues = [];
+  records.forEach(record => {
+    if (!record.product || !record.accessionNumber || !record.searchCode) issues.push(`${record.product || 'Unknown record'} missing core identifier fields`);
+    ['sterility','endotoxin','heavyMetals','residualSolvents'].forEach(field => {
+      if (!record[field]) issues.push(`${record.product} missing ${field} status`);
+    });
+  });
+  return issues;
+}
+
+const qualityValidationIssues = validateCoaData(COA_DATA);
+if (qualityValidationIssues.length) console.warn('COA data validation warnings:', qualityValidationIssues);
+
+const qualitySearchEl = document.getElementById('qualitySearch');
+const qualityPurityEl = document.getElementById('qualityPurityFilter');
+if (qualitySearchEl) qualitySearchEl.addEventListener('input', e => { qualitySearchQuery = e.target.value.trim(); renderQuality(); });
+if (qualityPurityEl) qualityPurityEl.addEventListener('change', e => { qualityPurityFilter = e.target.value; renderQuality(); });
+document.querySelectorAll('#qualityConcernFilters .filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#qualityConcernFilters .filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    qualityConcernFilter = btn.dataset.concern;
+    renderQuality();
+  });
+});
+
+renderQualitySummary();
+renderQuality();
+
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const hasFinePointer = window.matchMedia('(pointer:fine)').matches;
+
+// ── HERO WORDMARK REVEAL ────────────────────────────────────────────────────
+// The Peak Performance wordmark now uses a CSS-only lab-scan reveal for smoother rendering.
+
+// ── 3D MOLECULES ──────────────────────────────────────────────────────────────
 try {
-  const mc = document.getElementById('molecule-canvas');
-  if (!mc) throw new Error('no canvas');
-  const mctx = mc.getContext('2d');
+  const moleculeCanvases = [
+    { id:'molecule-canvas',   scale:520, rx:0.28, ry:0.48, spinX:0.0024, spinY:0.0042, mouse:0.44, atomAlpha:0.56, bondAlpha:0.110, offsetX:0,  offsetY:0 },
+    { id:'molecule-canvas-2', scale:560, rx:0.52, ry:-0.35, spinX:0.0018, spinY:-0.0032, mouse:0.22, atomAlpha:0.42, bondAlpha:0.085, offsetX:-10, offsetY:12 },
+    { id:'molecule-canvas-3', scale:600, rx:-0.18, ry:0.92, spinX:-0.0014, spinY:0.0028, mouse:0.20, atomAlpha:0.36, bondAlpha:0.074, offsetX:14, offsetY:-8 },
+    { id:'molecule-canvas-4', scale:600, rx:0.86, ry:0.15, spinX:0.0012, spinY:0.0020, mouse:0.18, atomAlpha:0.34, bondAlpha:0.068, offsetX:-16, offsetY:-6 },
+    { id:'molecule-canvas-5', scale:580, rx:-0.42, ry:-0.72, spinX:-0.0010, spinY:0.0024, mouse:0.18, atomAlpha:0.34, bondAlpha:0.070, offsetX:12, offsetY:16 }
+  ];
 
-  // Atoms: [x, y, z, radius, label]
-  const ATOMS = [
-    [  0,   0,   0, 14, 'C'],
-    [ 80,   0,  30, 10, 'N'],
-    [-80,  20, -20, 10, 'O'],
-    [ 20,  90,  10, 10, 'C'],
-    [ 30, -80,  40,  9, 'H'],
-    [-30, -60, -50,  9, 'N'],
-    [ 70,  60, -30,  8, 'H'],
-    [-60,  70,  50,  8, 'C'],
-    [100, -40, -60,  7, 'O'],
-    [-100,-30,  20,  7, 'H'],
-    [ 10, 110, -40,  7, 'C'],
-    [-20,-110,  10,  6, 'N'],
+  const BASE_ATOMS = [
+    [  0,   0,   0, 14, 'C'], [ 80,   0,  30, 10, 'N'], [-80,  20, -20, 10, 'O'],
+    [ 20,  90,  10, 10, 'C'], [ 30, -80,  40,  9, 'H'], [-30, -60, -50,  9, 'N'],
+    [ 70,  60, -30,  8, 'H'], [-60,  70,  50,  8, 'C'], [100, -40, -60,  7, 'O'],
+    [-100,-30,  20,  7, 'H'], [ 10, 110, -40,  7, 'C'], [-20,-110,  10,  6, 'N']
   ];
   const BONDS = [[0,1],[0,2],[0,3],[0,4],[0,5],[1,6],[1,8],[2,9],[3,7],[3,10],[5,11]];
-  const COLS  = ['rgba(17,17,17,0.85)','rgba(50,50,50,0.75)','rgba(50,50,50,0.75)',
-                 'rgba(70,70,70,0.7)','rgba(70,70,70,0.7)','rgba(70,70,70,0.7)',
-                 'rgba(95,95,95,0.6)','rgba(95,95,95,0.6)','rgba(115,115,115,0.55)',
-                 'rgba(115,115,115,0.55)','rgba(115,115,115,0.55)','rgba(135,135,135,0.5)'];
-
-  let W = 0, H = 0, cxM = 0, cyM = 0;
-  function resizeMol() {
-    W = mc.width  = mc.offsetWidth  || mc.parentElement.offsetWidth  || 800;
-    H = mc.height = mc.offsetHeight || mc.parentElement.offsetHeight || 600;
-    cxM = W / 2; cyM = H / 2;
-  }
-  resizeMol();
-  window.addEventListener('resize', resizeMol);
-
-  let mRx = 0.3, mRy = 0.5;
-  let molMx = 0, molMy = 0;
+  let molMx = window.innerWidth / 2, molMy = window.innerHeight / 2;
   document.addEventListener('mousemove', e => { molMx = e.clientX; molMy = e.clientY; });
 
-  function proj(ax, ay, az, rx, ry, sc) {
-    const cosX = Math.cos(rx), sinX = Math.sin(rx);
-    const cosY = Math.cos(ry), sinY = Math.sin(ry);
-    const y2 = ay * cosX - az * sinX;
-    const z2 = ay * sinX + az * cosX;
-    const x2 = ax * cosY + z2 * sinY;
-    const z3 = -ax * sinY + z2 * cosY;
-    const f  = 600 / (600 + z3);
-    return { sx: cxM + x2 * f * sc, sy: cyM + y2 * f * sc, depth: z3, f };
+  function renderMoleculeCanvas(config) {
+    const canvas = document.getElementById(config.id);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W = 0, H = 0, cx = 0, cy = 0;
+    let rx = config.rx, ry = config.ry;
+
+    const atoms = BASE_ATOMS.map((atom, i) => [
+      atom[0] + Math.sin(i * 1.8) * (config.offsetX || 0),
+      atom[1] + Math.cos(i * 1.4) * (config.offsetY || 0),
+      atom[2], atom[3], atom[4]
+    ]);
+
+    function resize() {
+      W = canvas.width = canvas.offsetWidth || 320;
+      H = canvas.height = canvas.offsetHeight || 320;
+      cx = W / 2;
+      cy = H / 2;
+    }
+
+    function project(ax, ay, az, angleX, angleY, sc) {
+      const cosX = Math.cos(angleX), sinX = Math.sin(angleX);
+      const cosY = Math.cos(angleY), sinY = Math.sin(angleY);
+      const y2 = ay * cosX - az * sinX;
+      const z2 = ay * sinX + az * cosX;
+      const x2 = ax * cosY + z2 * sinY;
+      const z3 = -ax * sinY + z2 * cosY;
+      const f = 600 / (600 + z3);
+      return { sx: cx + x2 * f * sc, sy: cy + y2 * f * sc, depth: z3, f };
+    }
+
+    function draw() {
+      if (!W || !H) return;
+      const rect = canvas.getBoundingClientRect();
+      const localX = (molMx - rect.left) / (rect.width || 1) - 0.5;
+      const localY = (molMy - rect.top) / (rect.height || 1) - 0.5;
+      const targetRy = config.ry + localX * config.mouse;
+      const targetRx = config.rx - localY * (config.mouse * 0.7);
+      rx += (targetRx - rx) * 0.025 + config.spinX;
+      ry += (targetRy - ry) * 0.025 + config.spinY;
+
+      const sc = Math.min(W, H) / config.scale;
+      ctx.clearRect(0, 0, W, H);
+      const points = atoms.map(a => project(a[0], a[1], a[2], rx, ry, sc));
+
+      BONDS.forEach(([i, j]) => {
+        const pi = points[i], pj = points[j];
+        const avgF = (pi.f + pj.f) / 2;
+        ctx.beginPath();
+        ctx.moveTo(pi.sx, pi.sy);
+        ctx.lineTo(pj.sx, pj.sy);
+        ctx.strokeStyle = 'rgba(47,109,246,' + (avgF * config.bondAlpha).toFixed(3) + ')';
+        ctx.lineWidth = Math.max(1, avgF * 1.8);
+        ctx.stroke();
+      });
+
+      atoms.map((_, i) => i).sort((a, b) => points[a].depth - points[b].depth).forEach(i => {
+        const point = points[i];
+        const r = atoms[i][3] * point.f * sc;
+        if (r < 1) return;
+        ctx.beginPath();
+        ctx.arc(point.sx, point.sy, r * 1.85, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(47,109,246,0.045)';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(point.sx, point.sy, r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(15,23,42,' + (config.atomAlpha * point.f).toFixed(3) + ')';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(point.sx - r*0.28, point.sy - r*0.28, r*0.32, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(255,255,255,0.28)';
+        ctx.fill();
+        if (r > 5.5 && config.atomAlpha > 0.34) {
+          ctx.fillStyle = 'rgba(255,255,255,0.86)';
+          ctx.font = '800 ' + Math.round(r*0.78) + 'px Inter, Arial, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(atoms[i][4], point.sx, point.sy);
+        }
+      });
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+    return draw;
   }
 
-  (function molLoop() {
-    requestAnimationFrame(molLoop);
-    if (!W || !H) return;
-
-    // Mouse tilt
-    const rect = mc.getBoundingClientRect();
-    const tgtRy = mRy + ((molMx - rect.left) / (rect.width  || 1) - 0.5) * 0.7;
-    const tgtRx = mRx - ((molMy - rect.top)  / (rect.height || 1) - 0.5) * 0.45;
-    mRx += (tgtRx - mRx) * 0.03 + 0.003;
-    mRy += (tgtRy - mRy) * 0.03 + 0.005;
-
-    const sc = Math.min(W, H) / 480;
-    mctx.clearRect(0, 0, W, H);
-
-    // Project all atoms
-    const P = ATOMS.map(a => proj(a[0], a[1], a[2], mRx, mRy, sc));
-
-    // Draw bonds
-    BONDS.forEach(([i, j]) => {
-      const pi = P[i], pj = P[j];
-      mctx.beginPath();
-      mctx.moveTo(pi.sx, pi.sy);
-      mctx.lineTo(pj.sx, pj.sy);
-      const avgF = (pi.f + pj.f) / 2;
-      mctx.strokeStyle = 'rgba(17,17,17,' + (avgF * 0.18).toFixed(3) + ')';
-      mctx.lineWidth = avgF * 2;
-      mctx.stroke();
-    });
-
-    // Sort atoms back-to-front
-    const order = ATOMS.map((_, i) => i).sort((a, b) => P[a].depth - P[b].depth);
-
-    order.forEach(i => {
-      const p = P[i];
-      const r = ATOMS[i][3] * p.f * sc;
-      if (r < 1) return;
-      mctx.beginPath();
-      mctx.arc(p.sx, p.sy, r * 1.7, 0, Math.PI * 2);
-      mctx.fillStyle = 'rgba(0,0,0,0.04)';
-      mctx.fill();
-      mctx.beginPath();
-      mctx.arc(p.sx, p.sy, r, 0, Math.PI * 2);
-      mctx.fillStyle = COLS[i];
-      mctx.fill();
-      mctx.beginPath();
-      mctx.arc(p.sx - r*0.28, p.sy - r*0.28, r*0.32, 0, Math.PI*2);
-      mctx.fillStyle = 'rgba(255,255,255,0.22)';
-      mctx.fill();
-      if (r > 6) {
-        mctx.fillStyle = 'rgba(255,255,255,0.88)';
-        mctx.font = 'bold ' + Math.round(r*0.85) + 'px Arial';
-        mctx.textAlign = 'center';
-        mctx.textBaseline = 'middle';
-        mctx.fillText(ATOMS[i][4], p.sx, p.sy);
-      }
-    });
-  })();
+  if (!prefersReducedMotion) {
+    const drawers = moleculeCanvases.map(renderMoleculeCanvas).filter(Boolean);
+    (function moleculeLoop() {
+      requestAnimationFrame(moleculeLoop);
+      drawers.forEach(draw => draw());
+    })();
+  }
 } catch(e) { console.warn('Molecule render error:', e); }
 
 // ── CURSOR + TRAIL ────────────────────────────────────────────────────────────
@@ -923,7 +1654,10 @@ const trailCanvas = document.getElementById('trail-canvas');
 const tctx      = trailCanvas.getContext('2d');
 let mx=-100, my=-100, rx=-100, ry=-100;
 const pts = [];
+const enablePointerEffects = !prefersReducedMotion && hasFinePointer && cursorEl && ringEl && trailCanvas && tctx;
 
+if (enablePointerEffects) {
+document.body.classList.add('pointer-effects-enabled');
 trailCanvas.width = window.innerWidth; trailCanvas.height = window.innerHeight;
 window.addEventListener('resize', () => { trailCanvas.width=window.innerWidth; trailCanvas.height=window.innerHeight; });
 
@@ -952,10 +1686,25 @@ function loop() {
   requestAnimationFrame(loop);
 }
 loop();
+} else {
+  if (cursorEl) cursorEl.style.display = 'none';
+  if (ringEl) ringEl.style.display = 'none';
+  if (trailCanvas) trailCanvas.style.display = 'none';
+}
 
 // ── MISC ──────────────────────────────────────────────────────────────────────
-function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
-document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
+function toggleNav() {
+  const navLinks = document.getElementById('navLinks');
+  const hamburger = document.getElementById('hamburger');
+  const isOpen = navLinks.classList.toggle('open');
+  if (hamburger) hamburger.setAttribute('aria-expanded', String(isOpen));
+}
+document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => {
+  const navLinks = document.getElementById('navLinks');
+  const hamburger = document.getElementById('hamburger');
+  navLinks.classList.remove('open');
+  if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
+}));
 window.addEventListener('scroll', () => {
   document.querySelector('nav').style.background = window.scrollY>60 ? 'rgba(249,249,249,0.98)' : 'rgba(249,249,249,0.9)';
 });
@@ -971,7 +1720,8 @@ function submitForm(e) {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams(new FormData(form)).toString()
   })
-  .then(() => {
+  .then(response => {
+    if (!response.ok) throw new Error('Form submission failed');
     document.getElementById('formContent').style.display = 'none';
     document.getElementById('formSuccess').style.display = 'block';
   })
