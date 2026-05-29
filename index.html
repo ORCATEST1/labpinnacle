@@ -50,16 +50,11 @@
   }
   #trail-canvas { position:fixed; inset:0; z-index:9997; pointer-events:none; }
 
-  /* ── GRID BG ── */
-  .bg-grid {
-    position:fixed; inset:0; z-index:0; pointer-events:none;
-    background-image:
-      linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
-    background-size:48px 48px;
-    animation:gridShift 28s linear infinite;
+  /* ── MOLECULE CANVAS ── */
+  #molecule-canvas {
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    z-index:0; pointer-events:none;
   }
-  @keyframes gridShift { to { transform:translateY(48px); } }
 
   /* ── NAV ── */
   nav {
@@ -405,7 +400,6 @@
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 <canvas id="trail-canvas"></canvas>
-<div class="bg-grid"></div>
 
 <!-- NAV -->
 <nav>
@@ -420,14 +414,15 @@
 </nav>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-badge"><span class="badge-dot"></span> Research Grade · ISO Certified · Discreet Shipping</div>
-  <h1>
+<section class="hero" style="position:relative; overflow:hidden;">
+  <canvas id="molecule-canvas"></canvas>
+  <div class="hero-badge" style="position:relative;z-index:2;"><span class="badge-dot"></span> Research Grade · ISO Certified · Discreet Shipping</div>
+  <h1 style="position:relative;z-index:2;">
     <span style="display:block">The Science of</span>
     <span class="scatter-word" id="scatterWord">Peak Performance</span>
   </h1>
-  <p class="hero-sub">Research-grade compounds sourced from ISO-certified manufacturers. Third-party CoA on every batch. Single-vial fulfillment.</p>
-  <div class="hero-actions">
+  <p class="hero-sub" style="position:relative;z-index:2;">Research-grade compounds sourced from ISO-certified manufacturers. Third-party CoA on every batch. Single-vial fulfillment.</p>
+  <div class="hero-actions" style="position:relative;z-index:2;">
     <a href="#catalog" class="btn-primary">Browse Catalog</a>
     <a href="#order" class="btn-secondary">Place an Order</a>
   </div>
@@ -436,10 +431,10 @@
 <!-- STATS -->
 <div style="position:relative;z-index:1;padding:0 24px 56px;max-width:1160px;margin:0 auto;">
   <div class="stats-bar">
-    <div class="stat-item"><div class="stat-num" id="compoundCount">—</div><div class="stat-label">Compounds</div></div>
+    <div class="stat-item"><div class="stat-num">14</div><div class="stat-label">Compounds</div></div>
     <div class="stat-item"><div class="stat-num">99%</div><div class="stat-label">Purity Min.</div></div>
     <div class="stat-item"><div class="stat-num">ISO</div><div class="stat-label">Certified Labs</div></div>
-    <div class="stat-item"><div class="stat-num">8</div><div class="stat-label">Categories</div></div>
+    <div class="stat-item"><div class="stat-num">6</div><div class="stat-label">Categories</div></div>
     <div class="stat-item"><div class="stat-num">24h</div><div class="stat-label">Invoice Time</div></div>
   </div>
 </div>
@@ -447,31 +442,29 @@
 <!-- TICKER -->
 <div class="ticker-wrap">
   <div class="ticker-track">
-    <div class="ticker-item">Semaglutide <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">Tirzepatide <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">BPC-157 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
     <div class="ticker-item">Retatrutide <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">TB-500 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">CJC-1295 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">NAD+ <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">Tesamorelin <b>IN STOCK</b></div><div class="ticker-sep">|</div>
     <div class="ticker-item">GHK-CU <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">Selank <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">PT-141 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">Thymosin Alpha-1 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">Epithalon <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <!-- dup -->
-    <div class="ticker-item">Semaglutide <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">Tirzepatide <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">Lemon Bottle <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">MOTS-c <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">NAD+ <b>IN STOCK</b></div><div class="ticker-sep">|</div>
     <div class="ticker-item">BPC-157 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">Retatrutide <b>IN STOCK</b></div><div class="ticker-sep">|</div>
     <div class="ticker-item">TB-500 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">CJC-1295 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">NAD+ <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">CJC-1295 + Ipamorelin <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">IGF-1LR3 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">Bac. Water <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <!-- dup for seamless loop -->
+    <div class="ticker-item">Retatrutide <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">Tesamorelin <b>IN STOCK</b></div><div class="ticker-sep">|</div>
     <div class="ticker-item">GHK-CU <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">Selank <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">PT-141 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">Thymosin Alpha-1 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
-    <div class="ticker-item">Epithalon <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">Lemon Bottle <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">MOTS-c <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">NAD+ <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">BPC-157 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">TB-500 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">CJC-1295 + Ipamorelin <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">IGF-1LR3 <b>IN STOCK</b></div><div class="ticker-sep">|</div>
+    <div class="ticker-item">Bac. Water <b>IN STOCK</b></div><div class="ticker-sep">|</div>
   </div>
 </div>
 
@@ -597,116 +590,38 @@
 // doses: [{spec, code, price (per 10 vials catalog), stock}]
 // price per vial = price (shown to customer)
 const COMPOUNDS = [
-  // ── Weight Loss & GLP-1 ──
-  {cat:"Weight Loss",name:"5-amino-1mq",doses:[{s:"5mg",c:"5AM",p:45,st:"in"},{s:"10mg",c:"10AM",p:77,st:"in"},{s:"50mg",c:"50AM",p:108,st:"in"}]},
-  {cat:"Weight Loss",name:"Adipotide",doses:[{s:"2mg",c:"AP2",p:80,st:"in"},{s:"5mg",c:"AP5",p:135,st:"in"},{s:"10mg",c:"AP10",p:200,st:"in"}]},
-  {cat:"Weight Loss",name:"AOD9604",doses:[{s:"5mg",c:"AOD5",p:101,st:"in"},{s:"10mg",c:"AOD10",p:135,st:"in"}]},
-  {cat:"Weight Loss",name:"B7-33",doses:[{s:"10mg",c:"B733-10",p:230,st:"low"}]},
-  {cat:"Weight Loss",name:"Cagrilintide",doses:[{s:"2mg",c:"CGL2",p:83,st:"in"},{s:"5mg",c:"CGL5",p:105,st:"in"},{s:"10mg",c:"CGL10",p:180,st:"in"}]},
-  {cat:"Weight Loss",name:"LC-216",doses:[{s:"10mg",c:"LC216",p:44,st:"in"}]},
-  {cat:"Weight Loss",name:"Lemon Bottle",doses:[{s:"3.5mg/10ml",c:"Lemon",p:50,st:"in"}]},
-  {cat:"Weight Loss",name:"Liraglutide",doses:[{s:"5mg",c:"LI5",p:99,st:"in"},{s:"10mg",c:"LI10",p:166,st:"in"},{s:"30mg",c:"LI30",p:463,st:"low"}]},
-  {cat:"Weight Loss",name:"Mazdutide",doses:[{s:"5mg",c:"MAZ5",p:95,st:"in"},{s:"10mg",c:"MAZ10",p:185,st:"in"},{s:"20mg",c:"MAZ20",p:360,st:"in"}]},
-  {cat:"Weight Loss",name:"PEG MGF",doses:[{s:"2mg",c:"FMP2",p:75,st:"in"}]},
+  // ── Weight Loss ──
   {cat:"Weight Loss",name:"Retatrutide",doses:[{s:"5mg",c:"RT5",p:54,st:"in"},{s:"10mg",c:"RT10",p:88,st:"in"},{s:"15mg",c:"RT15",p:123,st:"in"},{s:"20mg",c:"RT20",p:155,st:"in"},{s:"30mg",c:"RT30",p:200,st:"in"},{s:"40mg",c:"RT40",p:275,st:"in"},{s:"50mg",c:"RT50",p:320,st:"in"},{s:"60mg",c:"RT60",p:370,st:"in"},{s:"100mg",c:"RT100",p:490,st:"low"}]},
-  {cat:"Weight Loss",name:"Retatrutide 20mg + Tirzepatide 40mg",doses:[{s:"60mg",c:"RT20+TR40",p:260,st:"in"}]},
-  {cat:"Weight Loss",name:"RP226",doses:[{s:"10ml x 226mg/ml",c:"RP226",p:69,st:"in"}]},
-  {cat:"Weight Loss",name:"Semaglutide",doses:[{s:"2mg",c:"SM2",p:29,st:"in"},{s:"5mg",c:"SM5",p:39,st:"in"},{s:"10mg",c:"SM10",p:51,st:"in"},{s:"15mg",c:"SM15",p:60,st:"in"},{s:"20mg",c:"SM20",p:74,st:"in"},{s:"30mg",c:"SM30",p:99,st:"in"}]},
-  {cat:"Weight Loss",name:"SHB",doses:[{s:"10ml x 865mg/vial",c:"SHB",p:132,st:"in"}]},
-  {cat:"Weight Loss",name:"SS-31 (WL)",doses:[{s:"5mg",c:"2S5",p:59,st:"in"}]},
-  {cat:"Weight Loss",name:"Survodutide",doses:[{s:"5mg",c:"SUR5",p:168,st:"in"},{s:"10mg",c:"SUR10",p:271,st:"low"}]},
-  {cat:"Weight Loss",name:"Tirzepatide",doses:[{s:"5mg",c:"TR5",p:40,st:"in"},{s:"10mg",c:"TR10",p:50,st:"in"},{s:"15mg",c:"TR15",p:66,st:"in"},{s:"20mg",c:"TR20",p:88,st:"in"},{s:"30mg",c:"TR30",p:107,st:"in"},{s:"40mg",c:"TR40",p:138,st:"in"},{s:"50mg",c:"TR50",p:165,st:"in"},{s:"60mg",c:"TR60",p:199,st:"in"},{s:"100mg",c:"TR100",p:300,st:"in"},{s:"120mg",c:"TR120",p:350,st:"low"}]},
+  {cat:"Weight Loss",name:"Lemon Bottle (Glow)",doses:[{s:"3.5mg/10ml",c:"Lemon",p:50,st:"in"}]},
   // ── Growth Hormone ──
-  {cat:"Growth Hormone",name:"CJC-1295 NO DAC",doses:[{s:"2mg",c:"CND2",p:48,st:"in"},{s:"5mg",c:"CND5",p:77,st:"in"},{s:"10mg",c:"CND10",p:156,st:"in"}]},
-  {cat:"Growth Hormone",name:"CJC-1295 with DAC",doses:[{s:"2mg",c:"CD2",p:80,st:"in"},{s:"5mg",c:"CD5",p:150,st:"in"}]},
-  {cat:"Growth Hormone",name:"GHRP-2 Acetate",doses:[{s:"5mg",c:"G25",p:35,st:"in"},{s:"10mg",c:"G210",p:50,st:"in"},{s:"15mg",c:"G215",p:60,st:"in"}]},
-  {cat:"Growth Hormone",name:"GHRP-6 Acetate",doses:[{s:"5mg",c:"G65",p:35,st:"in"},{s:"10mg",c:"G610",p:50,st:"in"}]},
-  {cat:"Growth Hormone",name:"Gonadorelin",doses:[{s:"2mg",c:"GND2",p:30,st:"in"},{s:"5mg",c:"GND5",p:50,st:"in"}]},
-  {cat:"Growth Hormone",name:"Hexarelin Acetate",doses:[{s:"2mg",c:"HX2",p:42,st:"in"},{s:"5mg",c:"HX5",p:106,st:"in"}]},
-  {cat:"Growth Hormone",name:"IGF-1LR3",doses:[{s:"0.1mg",c:"IG01",p:53,st:"in"},{s:"1mg",c:"IG1",p:169,st:"in"}]},
-  {cat:"Growth Hormone",name:"Ipamorelin",doses:[{s:"5mg",c:"IP5",p:49,st:"in"},{s:"10mg",c:"IP10",p:69,st:"in"}]},
-  {cat:"Growth Hormone",name:"MGF",doses:[{s:"2mg",c:"FM2",p:55,st:"in"}]},
-  {cat:"Growth Hormone",name:"Sermorelin Acetate",doses:[{s:"2mg",c:"SML2",p:60,st:"in"},{s:"5mg",c:"SML5",p:74,st:"in"},{s:"10mg",c:"SML10",p:120,st:"in"},{s:"15mg",c:"SML15",p:160,st:"in"},{s:"20mg",c:"SML20",p:220,st:"in"},{s:"30mg",c:"SML30",p:300,st:"low"}]},
   {cat:"Growth Hormone",name:"Tesamorelin",doses:[{s:"5mg",c:"TSM5",p:89,st:"in"},{s:"10mg",c:"TSM10",p:156,st:"in"},{s:"20mg",c:"TSM20",p:272,st:"in"}]},
+  {cat:"Growth Hormone",name:"CJC-1295 NO DAC",doses:[{s:"2mg",c:"CND2",p:48,st:"in"},{s:"5mg",c:"CND5",p:77,st:"in"},{s:"10mg",c:"CND10",p:156,st:"in"}]},
+  {cat:"Growth Hormone",name:"Ipamorelin",doses:[{s:"5mg",c:"IP5",p:49,st:"in"},{s:"10mg",c:"IP10",p:69,st:"in"}]},
+  {cat:"Growth Hormone",name:"IGF-1LR3",doses:[{s:"0.1mg",c:"IG01",p:53,st:"in"},{s:"1mg",c:"IG1",p:169,st:"in"}]},
   // ── Repair & Recovery ──
-  {cat:"Repair",name:"Ara-290",doses:[{s:"10mg",c:"RA10",p:64,st:"in"}]},
   {cat:"Repair",name:"BPC-157",doses:[{s:"5mg",c:"BC5",p:45,st:"in"},{s:"10mg",c:"BC10",p:71,st:"in"},{s:"20mg",c:"BC20",p:100,st:"in"}]},
-  {cat:"Repair",name:"bronchogen",doses:[{s:"20mg",c:"BR20",p:99,st:"in"}]},
-  {cat:"Repair",name:"Cardiogen",doses:[{s:"20mg",c:"CA20",p:99,st:"in"}]},
-  {cat:"Repair",name:"Cartalax",doses:[{s:"20mg",c:"CR20",p:90,st:"in"}]},
-  {cat:"Repair",name:"FOXO4-DRI",doses:[{s:"2mg",c:"F4 2",p:56,st:"low"}]},
-  {cat:"Repair",name:"KissPeptin-10",doses:[{s:"5mg",c:"KS5",p:42,st:"in"},{s:"10mg",c:"KS10",p:73,st:"in"}]},
-  {cat:"Repair",name:"KPV",doses:[{s:"5mg",c:"KP5",p:38,st:"in"},{s:"10mg",c:"KP10",p:50,st:"in"}]},
-  {cat:"Repair",name:"LL37",doses:[{s:"5mg",c:"LL375",p:99,st:"in"}]},
-  {cat:"Repair",name:"PNC-27",doses:[{s:"10ml",c:"PNC10",p:79,st:"in"}]},
-  {cat:"Repair",name:"SS-31",doses:[{s:"10mg",c:"2S10",p:80,st:"in"},{s:"50mg",c:"2S50",p:299,st:"low"}]},
-  {cat:"Repair",name:"TB Frag",doses:[{s:"5mg",c:"TBF5",p:64,st:"in"},{s:"10mg",c:"TBF10",p:104,st:"in"},{s:"15mg",c:"TBF15",p:220,st:"in"}]},
   {cat:"Repair",name:"TB-500",doses:[{s:"5mg",c:"TB5",p:72,st:"in"},{s:"10mg",c:"TB10",p:140,st:"in"}]},
-  {cat:"Repair",name:"Vesugen",doses:[{s:"10mg",c:"VE10",p:230,st:"low"}]},
-  // ── Cosmetic ──
-  {cat:"Cosmetic",name:"Botulinum Toxin",doses:[{s:"100iu",c:"XT100",p:82,st:"in"}]},
-  {cat:"Cosmetic",name:"Epithalon",doses:[{s:"10mg",c:"ET10",p:44,st:"in"},{s:"50mg",c:"ET50",p:138,st:"in"}]},
+  // ── Cosmetic & Skin ──
   {cat:"Cosmetic",name:"GHK-CU",doses:[{s:"50mg",c:"CU50",p:30,st:"in"},{s:"100mg",c:"CU100",p:41,st:"in"}]},
-  {cat:"Cosmetic",name:"Lipo-B (LC120)",doses:[{s:"120mg",c:"MIC",p:50,st:"in"}]},
-  {cat:"Cosmetic",name:"Matrixyl",doses:[{s:"5mg",c:"MX10",p:299,st:"low"}]},
-  {cat:"Cosmetic",name:"MT-1 (Melanocyte Stim.)",doses:[{s:"10mg",c:"MT1",p:50,st:"in"}]},
-  {cat:"Cosmetic",name:"MT-2 (Melanotan 2)",doses:[{s:"10mg",c:"MT2",p:50,st:"in"}]},
-  {cat:"Cosmetic",name:"SNAP-8",doses:[{s:"10mg",c:"NP810",p:44,st:"in"},{s:"100mg",c:"NP8100",p:174,st:"in"}]},
-  // ── Neuro ──
-  {cat:"Neuro",name:"ADMAX",doses:[{s:"5mg",c:"AD5",p:73,st:"in"},{s:"10mg",c:"AD10",p:115,st:"in"}]},
-  {cat:"Neuro",name:"cerebrolysin",doses:[{s:"60mg",c:"CBL60",p:73,st:"in"}]},
-  {cat:"Neuro",name:"Cortagen",doses:[{s:"20mg",c:"C020",p:123,st:"in"}]},
-  {cat:"Neuro",name:"DSIP",doses:[{s:"2mg",c:"DS2",p:35,st:"in"},{s:"5mg",c:"DS5",p:41,st:"in"},{s:"10mg",c:"DS10",p:72,st:"in"},{s:"15mg",c:"DS15",p:150,st:"in"}]},
-  {cat:"Neuro",name:"Humanin",doses:[{s:"10mg",c:"HU10",p:299,st:"low"}]},
-  {cat:"Neuro",name:"Melatonin",doses:[{s:"10mg",c:"MT10",p:55,st:"in"}]},
+  // ── Neuro, Sleep & Mood ──
   {cat:"Neuro",name:"MOTS-c",doses:[{s:"10mg",c:"MS10",p:68,st:"in"},{s:"20mg",c:"MS20",p:110,st:"in"},{s:"40mg",c:"MS40",p:189,st:"in"}]},
-  {cat:"Neuro",name:"Oxytocin Acetate",doses:[{s:"2mg",c:"OT2",p:34,st:"in"},{s:"5mg",c:"OT5",p:53,st:"in"},{s:"10mg",c:"OT10",p:81,st:"in"}]},
-  {cat:"Neuro",name:"P21 (P021)",doses:[{s:"10mg",c:"P21-10",p:223,st:"low"}]},
-  {cat:"Neuro",name:"PE-22-28",doses:[{s:"5mg",c:"PE5",p:44,st:"in"},{s:"10mg",c:"PE10",p:64,st:"in"}]},
-  {cat:"Neuro",name:"Pinealon",doses:[{s:"5ml",c:"PI5",p:65,st:"in"},{s:"10ml",c:"PI10",p:82,st:"in"},{s:"20mg",c:"PI20",p:153,st:"in"}]},
-  {cat:"Neuro",name:"PNC-27 (Neuro)",doses:[{s:"5mg",c:"PN5",p:86,st:"in"}]},
-  {cat:"Neuro",name:"PT-141",doses:[{s:"10mg",c:"PT41",p:56,st:"in"}]},
-  {cat:"Neuro",name:"Selank",doses:[{s:"5mg",c:"SK5",p:41,st:"in"},{s:"10mg",c:"SK10",p:77,st:"in"}]},
-  {cat:"Neuro",name:"Semax",doses:[{s:"5mg",c:"XA5",p:41,st:"in"},{s:"10mg",c:"XA10",p:55,st:"in"}]},
-  {cat:"Neuro",name:"VIP",doses:[{s:"5mg",c:"VIP5",p:73,st:"in"},{s:"10mg",c:"VIP10",p:130,st:"in"}]},
-  // ── Immune ──
-  {cat:"Immune",name:"ACE-031",doses:[{s:"1mg",c:"AE1",p:35,st:"in"}]},
-  {cat:"Immune",name:"AICAR",doses:[{s:"50mg",c:"AR50",p:70,st:"in"},{s:"1000mg",c:"AR100",p:100,st:"in"}]},
-  {cat:"Immune",name:"B12",doses:[{s:"mg/ml x10ml",c:"B12",p:41,st:"in"}]},
-  {cat:"Immune",name:"B7-33",doses:[{s:"2mg",c:"B733-2",p:65,st:"in"}]},
-  {cat:"Immune",name:"Crystagen",doses:[{s:"20mg",c:"CY20",p:86,st:"in"}]},
-  {cat:"Immune",name:"EPO",doses:[{s:"3000iu",c:"EP3000-10",p:73,st:"low"}]},
-  {cat:"Immune",name:"L Carnitine",doses:[{s:"600mg/10ml",c:"LC600",p:43,st:"in"}]},
+  // ── Immune, Energy & Performance ──
   {cat:"Immune",name:"NAD+",doses:[{s:"100mg",c:"NJ100",p:44,st:"in"},{s:"500mg",c:"NJ500",p:68,st:"in"},{s:"1000mg",c:"NJ1000",p:106,st:"in"}]},
-  {cat:"Immune",name:"Thymalin",doses:[{s:"10mg",c:"TY10",p:58,st:"in"}]},
-  {cat:"Immune",name:"Thymosin Alpha-1",doses:[{s:"5mg",c:"TA5",p:84,st:"in"},{s:"10mg",c:"TA10",p:132,st:"in"}]},
-  // ── Combinations ──
-  {cat:"Combo",name:"BPC 10mg + TB 10mg",doses:[{s:"20mg",c:"BB20",p:161,st:"in"}]},
-  {cat:"Combo",name:"BPC 157 + GHK-CU 50mg + TB500 10mg",doses:[{s:"70mg",c:"BBG70",p:185,st:"in"}]},
-  {cat:"Combo",name:"BPC 157 + GHK-CU + TB500 + KPV",doses:[{s:"80mg",c:"KLOW80",p:213,st:"in"}]},
-  {cat:"Combo",name:"BPC 157 5mg + GHK-CU 35mg + TB500 10mg",doses:[{s:"50mg",c:"BBG50",p:133,st:"in"}]},
-  {cat:"Combo",name:"BPC 15mg + TB 15mg",doses:[{s:"30mg",c:"BB30",p:230,st:"in"}]},
-  {cat:"Combo",name:"BPC 2mg + TB 2mg",doses:[{s:"4mg",c:"BB04",p:51,st:"in"}]},
-  {cat:"Combo",name:"BPC 5mg + TB 5mg",doses:[{s:"10mg",c:"BB10",p:92,st:"in"}]},
-  {cat:"Combo",name:"Cagrilintide + Semaglutide",doses:[{s:"5mg ea",c:"CS5",p:96,st:"in"},{s:"10mg ea",c:"CS10",p:162,st:"in"},{s:"20mg ea",c:"CS20",p:293,st:"in"}]},
+  // ── Combination Formulas ──
+  {cat:"Combo",name:"BPC-157 + TB-500",doses:[{s:"2mg ea",c:"BB04",p:51,st:"in"},{s:"5mg ea",c:"BB10",p:92,st:"in"},{s:"10mg ea",c:"BB20",p:161,st:"in"},{s:"15mg ea",c:"BB30",p:230,st:"in"}]},
   {cat:"Combo",name:"CJC-1295 NO DAC + Ipamorelin",doses:[{s:"5mg ea",c:"CP10",p:87,st:"in"},{s:"10mg ea",c:"CP20",p:162,st:"in"}]},
   // ── Reagents ──
-  {cat:"Reagents",name:"Acetic Acid 1%",doses:[{s:"3ml",c:"AA3",p:10,st:"in"},{s:"10ml",c:"AA10",p:14,st:"in"}]},
   {cat:"Reagents",name:"Bac. Water",doses:[{s:"3ml",c:"BAC3",p:10,st:"in"},{s:"10ml",c:"BAC10",p:12,st:"in"}]},
-  {cat:"Reagents",name:"Glutathione",doses:[{s:"600mg",c:"GT600",p:54,st:"in"},{s:"1500mg",c:"GT1500",p:70,st:"in"}]},
 ];
 
-// Best sellers based on r/Peptides popularity
+// All compounds are featured — catalog is curated
 const BESTSELLERS = new Set([
-  "BPC-157","TB-500","Semaglutide","Tirzepatide","Retatrutide",
-  "CJC-1295 NO DAC","Ipamorelin","NAD+","GHK-CU","Epithalon",
-  "Selank","PT-141","Thymosin Alpha-1","AOD9604","BPC 5mg + TB 5mg",
-  "BPC 10mg + TB 10mg","Sermorelin Acetate","Cagrilintide + Semaglutide",
-  "CJC-1295 + Ipamorelin","MOTS-c","Semax"
+  "Retatrutide","Lemon Bottle (Glow)","Tesamorelin","CJC-1295 NO DAC",
+  "Ipamorelin","IGF-1LR3","BPC-157","TB-500","GHK-CU","MOTS-c",
+  "NAD+","BPC-157 + TB-500","CJC-1295 NO DAC + Ipamorelin","Bac. Water"
 ]);
 
-// Set stat count
-document.getElementById('compoundCount').textContent = COMPOUNDS.length + '+';
+// Catalog is curated — stat count is hardcoded above
 
 const CAT_LABELS = {
   "Weight Loss":   "Weight Loss & GLP-1 Agonists",
@@ -891,75 +806,84 @@ function scramble() {
 }
 setTimeout(scramble, 900);
 
-// ── CURSOR + TRAIL ────────────────────────────────────────────────────────────
-const cursorEl  = document.getElementById('cursor');
-const ringEl    = document.getElementById('cursor-ring');
-const trailCanvas = document.getElementById('trail-canvas');
-const tctx      = trailCanvas.getContext('2d');
-let mx=-100, my=-100, rx=-100, ry=-100;
-const pts = [];
+// ── 3D MOLECULE ───────────────────────────────────────────────────────────────
+(function(){
+  const mc = document.getElementById('molecule-canvas');
+  const ctx2 = mc.getContext('2d');
+  let W, H, cx, cy;
 
-trailCanvas.width = window.innerWidth; trailCanvas.height = window.innerHeight;
-window.addEventListener('resize', () => { trailCanvas.width=window.innerWidth; trailCanvas.height=window.innerHeight; });
-
-document.addEventListener('mousemove', e => {
-  mx=e.clientX; my=e.clientY;
-  cursorEl.style.left=mx+'px'; cursorEl.style.top=my+'px';
-  if (Math.random()>0.5) pts.push({x:mx,y:my,vx:(Math.random()-.5)*1.2,vy:(Math.random()-.5)*1.2,life:1,size:Math.random()*2.5+1});
-});
-
-document.querySelectorAll('a, button, .filter-btn, .order-btn, .dose-pill, .toggle-switch').forEach(el => {
-  el.addEventListener('mouseenter', () => cursorEl.classList.add('hover'));
-  el.addEventListener('mouseleave', () => cursorEl.classList.remove('hover'));
-});
-
-function loop() {
-  rx += (mx-rx)*0.11; ry += (my-ry)*0.11;
-  ringEl.style.left=rx+'px'; ringEl.style.top=ry+'px';
-  tctx.clearRect(0,0,trailCanvas.width,trailCanvas.height);
-  for (let i=pts.length-1;i>=0;i--) {
-    const p=pts[i]; p.x+=p.vx; p.y+=p.vy; p.life-=0.05;
-    if (p.life<=0){pts.splice(i,1);continue;}
-    tctx.beginPath(); tctx.arc(p.x,p.y,p.size*p.life,0,Math.PI*2);
-    tctx.fillStyle=`rgba(17,17,17,${p.life*0.35})`;
-    tctx.fill();
+  function resize() {
+    W = mc.width  = mc.offsetWidth;
+    H = mc.height = mc.offsetHeight;
+    cx = W / 2; cy = H / 2;
   }
-  requestAnimationFrame(loop);
-}
-loop();
+  resize();
+  window.addEventListener('resize', resize);
 
-// ── MISC ──────────────────────────────────────────────────────────────────────
-function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
-document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
-window.addEventListener('scroll', () => {
-  document.querySelector('nav').style.background = window.scrollY>60 ? 'rgba(249,249,249,0.98)' : 'rgba(249,249,249,0.9)';
-});
+  // Mouse influence
+  let mouseX = 0, mouseY = 0;
+  document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
 
-function submitForm(e) {
-  e.preventDefault();
-  const form = e.target;
-  const btn = form.querySelector('.submit-btn');
-  btn.textContent = 'Sending...';
-  btn.disabled = true;
+  // Peptide-like molecule: central atom + 7 bonded atoms in 3D sphere layout
+  const ATOMS = [
+    {x:0,    y:0,    z:0,    r:14, col:'rgba(17,17,17,0.85)', label:'C'},
+    {x:80,   y:0,    z:30,   r:10, col:'rgba(60,60,60,0.75)', label:'N'},
+    {x:-80,  y:20,   z:-20,  r:10, col:'rgba(60,60,60,0.75)', label:'O'},
+    {x:20,   y:90,   z:10,   r:10, col:'rgba(80,80,80,0.7)',  label:'C'},
+    {x:30,   y:-80,  z:40,   r:9,  col:'rgba(80,80,80,0.7)',  label:'H'},
+    {x:-30,  y:-60,  z:-50,  r:9,  col:'rgba(80,80,80,0.7)',  label:'N'},
+    {x:70,   y:60,   z:-30,  r:8,  col:'rgba(100,100,100,0.6)', label:'H'},
+    {x:-60,  y:70,   z:50,   r:8,  col:'rgba(100,100,100,0.6)', label:'C'},
+    {x:100,  y:-40,  z:-60,  r:7,  col:'rgba(120,120,120,0.55)', label:'O'},
+    {x:-100, y:-30,  z:20,   r:7,  col:'rgba(120,120,120,0.55)', label:'H'},
+    {x:10,   y:110,  z:-40,  r:7,  col:'rgba(120,120,120,0.55)', label:'C'},
+    {x:-20,  y:-110, z:10,   r:6,  col:'rgba(140,140,140,0.5)',  label:'N'},
+  ];
 
-  fetch('/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams(new FormData(form)).toString()
-  })
-  .then(() => {
-    document.getElementById('formContent').style.display = 'none';
-    document.getElementById('formSuccess').style.display = 'block';
-  })
-  .catch(() => {
-    btn.textContent = 'Submit Request — Get Invoice';
-    btn.disabled = false;
-    alert('Submission failed. Please email contact@labpinnacle.com directly.');
-  });
-}
+  const BONDS = [[0,1],[0,2],[0,3],[0,4],[0,5],[1,6],[1,8],[2,9],[3,7],[3,10],[5,11]];
 
-const obs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';} }), {threshold:0.08});
-document.querySelectorAll('.trust-item,.step').forEach(el => { el.style.opacity='0'; el.style.transform='translateY(16px)'; el.style.transition='opacity 0.5s ease,transform 0.5s ease'; obs.observe(el); });
-</script>
-</body>
-</html>
+  let rotX = 0.3, rotY = 0.5;
+  let velX = 0.003, velY = 0.005;
+  let tgtX = rotX, tgtY = rotY;
+
+  function project(x, y, z, scale) {
+    const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+    const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+    let y2 = y * cosX - z * sinX;
+    let z2 = y * sinX + z * cosX;
+    let x2 = x * cosY + z2 * sinY;
+    let z3 = -x * sinY + z2 * cosY;
+    const fov = 600;
+    const f = fov / (fov + z3);
+    return { sx: cx + x2 * f * scale, sy: cy + y2 * f * scale, z: z3, scale: f };
+  }
+
+  function drawMolecule(scale) {
+    ctx2.clearRect(0, 0, W, H);
+
+    // Project all atoms
+    const projected = ATOMS.map(a => ({ ...a, ...project(a.x, a.y, a.z, scale) }));
+
+    // Sort by z for painter's algorithm
+    projected.sort((a, b) => a.z - b.z);
+
+    // Draw bonds
+    BONDS.forEach(([i, j]) => {
+      const a = projected.find((_, idx) => ATOMS.indexOf(ATOMS[i]) === projected.indexOf(projected.find(p => p.label === ATOMS[i].label && Math.abs(p.sx - project(ATOMS[i].x, ATOMS[i].y, ATOMS[i].z, scale).sx) < 1)));
+      const pa = project(ATOMS[i].x, ATOMS[i].y, ATOMS[i].z, scale);
+      const pb = project(ATOMS[j].x, ATOMS[j].y, ATOMS[j].z, scale);
+      const alpha = 0.12 + 0.08 * ((pa.z + pb.z) / 200 + 0.5);
+      ctx2.beginPath();
+      ctx2.moveTo(pa.sx, pa.sy);
+      ctx2.lineTo(pb.sx, pb.sy);
+      ctx2.strokeStyle = 'rgba(17,17,17,' + Math.max(0.06, Math.min(0.2, alpha)) + ')';
+      ctx2.lineWidth = 1.5 * ((pa.scale + pb.scale) / 2);
+      ctx2.stroke();
+    });
+
+    // Draw atoms (back to front via sorted projected)
+    projected.forEach(a => {
+      const r = a.r * a.scale * scale;
+      // Shadow/glow
+      ctx2.beginPath();
+      ctx2.arc(a.sx, a.sy, r * 1.6, 0, Math.PI * 2);
